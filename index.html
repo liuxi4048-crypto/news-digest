@@ -1,165 +1,150 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Digest — AI・IT最新情報</title>
-  <meta name="description" content="AI・IT・PC/スマホツールの最新ニュースを毎朝9時に自動配信">
-  <style>
-    :root {
-      --bg: #f5f5f5;
-      --surface: #ffffff;
-      --text: #1a1a1a;
-      --text-secondary: #666;
-      --border: #e0e0e0;
-      --ai: #4f46e5;
-      --it: #0891b2;
-      --tool: #059669;
-      --ai-bg: #eef2ff;
-      --it-bg: #ecfeff;
-      --tool-bg: #d1fae5;
-      --radius: 12px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f172a;
-        --surface: #1e293b;
-        --text: #f1f5f9;
-        --text-secondary: #94a3b8;
-        --border: #334155;
-        --ai-bg: #1e1b4b;
-        --it-bg: #0c2231;
-        --tool-bg: #052e16;
-      }
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 20px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    header h1 { font-size: 18px; font-weight: 700; }
-    header .meta { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-    main { max-width: 680px; margin: 0 auto; padding: 16px; }
-    .section { margin-bottom: 28px; }
-    .section-title {
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 6px 12px;
-      border-radius: 6px;
-      display: inline-block;
-      margin-bottom: 12px;
-    }
-    .ai .section-title   { color: var(--ai);  background: var(--ai-bg); }
-    .it .section-title   { color: var(--it);  background: var(--it-bg); }
-    .tool .section-title { color: var(--tool); background: var(--tool-bg); }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 10px;
-    }
-    .card h2 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-    .card p  { font-size: 14px; color: var(--text-secondary); margin-bottom: 10px; }
-    .card a  {
-      font-size: 13px;
-      color: var(--ai);
-      text-decoration: none;
-      word-break: break-all;
-    }
-    .card a:hover { text-decoration: underline; }
-    .error-card {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: var(--radius);
-      padding: 20px;
-      text-align: center;
-      color: #b91c1c;
-    }
-    .archive {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 28px;
-    }
-    .archive h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
-    .archive ul { list-style: none; }
-    .archive li { margin-bottom: 6px; }
-    .archive a  { font-size: 13px; color: var(--ai); text-decoration: none; }
-    footer {
-      text-align: center;
-      padding: 24px 16px;
-      font-size: 12px;
-      color: var(--text-secondary);
-      border-top: 1px solid var(--border);
-    }
-    footer p { margin-bottom: 6px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Digest — 2026年06月15日</title>
+<style>
+:root { --bg:#f5f5f5; --surface:#fff; --text:#1a1a1a; --text-secondary:#666; --border:#e0e0e0; --ai:#4f46e5; --it:#0891b2; --tool:#059669; }
+@media(prefers-color-scheme:dark){ :root{ --bg:#0f172a; --surface:#1e293b; --text:#f1f5f9; --text-secondary:#94a3b8; --border:#334155; } }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px; text-align: center; }
+.header h1 { font-size: 1.2rem; font-weight: 700; }
+.header p { color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; }
+.container { max-width: 800px; margin: 0 auto; padding: 16px; }
+.section { margin-bottom: 32px; }
+.section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid; }
+.section-ai .section-title { border-color: var(--ai); color: var(--ai); }
+.section-it .section-title { border-color: var(--it); color: var(--it); }
+.section-tool .section-title { border-color: var(--tool); color: var(--tool); }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+.card-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+.card-summary { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; }
+.card-source { font-size: 0.8rem; }
+.card-source a { color: var(--ai); text-decoration: none; }
+.section-it .card-source a { color: var(--it); }
+.section-tool .card-source a { color: var(--tool); }
+.archive { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 24px; }
+.archive h2 { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; }
+.archive ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.archive ul li a { font-size: 0.82rem; color: var(--text-secondary); text-decoration: none; border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; display: block; }
+.footer { font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding: 16px; text-align: center; margin-top: 16px; }
+</style>
 </head>
 <body>
-  <header>
-    <h1>📰 Daily Digest</h1>
-    <div class="meta">初期セットアップ完了 — 明日9:00 JSTより自動配信開始</div>
-  </header>
-  <main>
-    <div class="error-card">
-      <p>🚀 セットアップ完了</p>
-      <p style="margin-top:8px;font-size:13px;">毎朝9:00 JSTに最新のAI・IT・スマホツール情報が自動更新されます。</p>
+<div class="header">
+  <h1>&#x1F4F0; Daily Digest &#x2014; 2026&#x5E74;06&#x6708;15&#x65E5; 09:00 JST</h1>
+  <p>&#x672C;&#x65E5;13&#x4EF6;</p>
+</div>
+<div class="container">
+
+  <section class="section section-ai">
+    <h2 class="section-title">&#x1F916; AI</h2>
+
+    <div class="card">
+      <div class="card-title">Google Cloud Next 2026&#xFF1A;&#x81EA;&#x5F8B;&#x578B;AI&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;&#x3078;&#x306E;&#x79FB;&#x884C;&#x3092;&#x5BA3;&#x8A00;</div>
+      <div class="card-summary">Google&#x306F;&#x30A8;&#x30F3;&#x30BF;&#x30FC;&#x30D7;&#x30E9;&#x30A4;&#x30BA;&#x5411;&#x3051;&#x30A4;&#x30D9;&#x30F3;&#x30C8;&#x300CGoogle Cloud Next 2026&#x300D;&#x3067;&#x3001;&#x4F01;&#x696D;&#x306E;&#x5F62;&#x614B;&#x3092;&#x300CAgentic Enterprise&#xFF08;&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;&#x578B;&#x4F01;&#x696D;&#xFF09;&#x300D;&#x3078;&#x79FB;&#x884C;&#x3055;&#x305B;&#x308B;&#x69CB;&#x60F3;&#x3092;&#x767A;&#x8868;&#x3057;&#x305F;&#x3002;&#x76EE;&#x7389;&#x3068;&#x306A;&#x308B;&#x300CGemini 3.1&#x300D;&#x306E;&#x516C;&#x958B;&#x3067;&#x3001;&#x51E6;&#x7406;&#x901F;&#x5EA6;&#x304C;&#x5F93;&#x6765;&#x6BD4;2.5&#x500D;&#x306B;&#x5411;&#x4E0A;&#x3057;&#x3001;&#x8907;&#x96D1;&#x306A;&#x30C7;&#x30FC;&#x30BF;&#x5206;&#x6790;&#x3084;&#x63A8;&#x8AD6;&#x30BF;&#x30B9;&#x30AF;&#x306E;&#x52B9;&#x7387;&#x3092;&#x5927;&#x5E45;&#x6539;&#x5584;&#x3059;&#x308B;&#x3068;&#x3044;&#x3046;&#x3002;&#x307E;&#x305F;&#x7B2C;8&#x4E16;&#x4EE3;TPU&#x306E;&#x6295;&#x5165;&#x3084;&#x30BB;&#x30AD;&#x30E5;&#x30EA;&#x30C6;&#x30A3;&#x4F01;&#x696D;Wiz&#x3068;&#x306E;&#x7D71;&#x5408;&#x3082;&#x767A;&#x8868;&#x3055;&#x308C;&#x3001;AI&#x30A4;&#x30F3;&#x30D5;&#x30E9;&#x306E;&#x5F37;&#x5316;&#x304C;&#x52A0;&#x901F;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://www.itmedia.co.jp/aiplus/article/2604/23/1260423061/" rel="noopener noreferrer" target="_blank">ITmedia AI&#xFF0B;</a></div>
     </div>
 
-    <div class="section ai">
-      <div class="section-title">🤖 AI</div>
-      <div class="card">
-        <h2>サンプル記事タイトル</h2>
-        <p>ここに3〜5行の日本語要約が自動生成されます。各記事はカテゴリ別に整理され、スマホでも読みやすく表示されます。</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">ソースを読む →</a>
-      </div>
+    <div class="card">
+      <div class="card-title">&#x4E2D;&#x56FD;AI&#x52E2;&#x304C;&#x731B;&#x8FFD;&#xFF1A;MiniMax M2.5&#x304CClaude Opus 4.6&#x306B;&#x5339;&#x6575;&#x3057;&#x306A;&#x304C;&#x3089;&#x4F4E;&#x30B3;&#x30B9;&#x30C8;&#x3092;&#x5B9F;&#x73FE;</div>
+      <div class="card-summary">2026&#x5E743&#x6708;&#x3001;Tencent&#x30FB;Alibaba&#x30FB;Baidu&#x30FB;ByteDance&#x306A;&#x3069;&#x4E2D;&#x56FD;&#x306E;&#x4E3B;&#x8981;IT&#x4F01;&#x696D;&#x304C;&#x76F8;&#x6B21;&#x3044;&#x3067;&#x65B0;&#x4E16;&#x4EE3;AI&#x30E2;&#x30C7;&#x30EB;&#x3092;&#x30EA;&#x30EA;&#x30FC;&#x30B9;&#x3057;&#x305F;&#x3002;&#x4E2D;&#x3067;&#x3082;MiniMax&#x306E;&#x300CM2.5&#x300D;&#x306F;&#x3001;Anthropic&#x88FD;&#x300CClaude Opus 4.6&#x300D;&#x3068;&#x540C;&#x7B49;&#x306E;&#x6027;&#x80FD;&#x3092;&#x6301;&#x3061;&#x306A;&#x304C;&#x3089;&#x5927;&#x5E45;&#x306B;&#x5B89;&#x4FA1;&#x3067;&#x5229;&#x7528;&#x3067;&#x304D;&#x308B;&#x3068;&#x3057;&#x3066;&#x6CE8;&#x76EE;&#x3092;&#x96C6;&#x3081;&#x3066;&#x3044;&#x308B;&#x3002;&#x4E2D;&#x56FD;AI&#x4F01;&#x696D;&#x306E;&#x6025;&#x901F;&#x306A;&#x30AD;&#x30E3;&#x30C3;&#x30C1;&#x30A2;&#x30C3;&#x30D7;&#x306F;&#x3001;&#x30B0;&#x30ED;&#x30FC;&#x30D0;&#x30EB;&#x306A;AI&#x7AF6;&#x4E89;&#x306E;&#x69CB;&#x56F3;&#x3092;&#x5909;&#x3048;&#x3064;&#x3064;&#x3042;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://blog.mean.ceo/new-ai-model-releases-news-march-2026/" rel="noopener noreferrer" target="_blank">Mean.ceo Blog (March 2026)</a></div>
     </div>
 
-    <div class="section it">
-      <div class="section-title">💻 IT・PC</div>
-      <div class="card">
-        <h2>サンプル記事タイトル</h2>
-        <p>IT・PCカテゴリのニュースが毎朝自動収集・要約されます。</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">ソースを読む →</a>
-      </div>
+    <div class="card">
+      <div class="card-title">GPT-5.5&#x767B;&#x5834;&#xFF1A;&#x30B3;&#x30FC;&#x30C7;&#x30A3;&#x30F3;&#x30B0;&#x3068;&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;&#x578B;&#x4F5C;&#x696D;&#x306B;&#x7279;&#x5316;&#x3057;&#x305F;&#x6B21;&#x4E16;&#x4EE3;&#x30E2;&#x30C7;&#x30EB;</div>
+      <div class="card-summary">OpenAI&#x304C;&#x300CGPT-5.5&#x300D;&#x3092;&#x30EA;&#x30EA;&#x30FC;&#x30B9;&#x3057;&#x3001;&#x30B3;&#x30FC;&#x30C7;&#x30A3;&#x30F3;&#x30B0;&#x652F;&#x63F4;&#x3084;&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;&#x578B;&#x30BF;&#x30B9;&#x30AF;&#x3078;&#x306E;&#x5BFE;&#x5FDC;&#x529B;&#x3092;&#x5F37;&#x5316;&#x3057;&#x305F;&#x3002;&#x540C;&#x30E2;&#x30C7;&#x30EB;&#x306F;&#x30C7;&#x30D0;&#x30C3;&#x30B0;&#x30FB;&#x8ABF;&#x67FB;&#x30FB;&#x30C7;&#x30FC;&#x30BF;&#x5206;&#x6790;&#x30FB;&#x30BD;&#x30D5;&#x30C8;&#x30A6;&#x30A7;&#x30A2;&#x904B;&#x7528;&#x306A;&#x3069;&#x3092;&#x81EA;&#x5F8B;&#x7684;&#x306B;&#x51E6;&#x7406;&#x3067;&#x304D;&#x308B;&#x3068;&#x8AAC;&#x660E;&#x3055;&#x308C;&#x3066;&#x304A;&#x308A;&#x3001;&#x958B;&#x767A;&#x8005;&#x306E;&#x751F;&#x7523;&#x6027;&#x5411;&#x4E0A;&#x306B;&#x76F4;&#x7D50;&#x3059;&#x308B;&#x6A5F;&#x80FD;&#x304C;&#x5145;&#x5B9F;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;&#x540C;&#x6642;&#x671F;&#x306B;DeepSeek V4&#x3082;&#x767B;&#x5834;&#x3057;&#x3001;&#x9577;&#x6587;&#x30B3;&#x30F3;&#x30C6;&#x30AD;&#x30B9;&#x30C8;&#x3068;&#x4F4E;&#x4FA1;&#x683C;&#x3092;&#x6B66;&#x5668;&#x306B;&#x5DEE;&#x5225;&#x5316;&#x3092;&#x56F3;&#x3063;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://blog.mean.ceo/new-ai-model-releases-news-may-2026/" rel="noopener noreferrer" target="_blank">Mean.ceo Blog (May 2026)</a></div>
     </div>
 
-    <div class="section tool">
-      <div class="section-title">📱 スマホ・ツール</div>
-      <div class="card">
-        <h2>サンプル記事タイトル</h2>
-        <p>スマホアプリや便利ツールの最新情報が自動配信されます。</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">ソースを読む →</a>
-      </div>
+    <div class="card">
+      <div class="card-title">&#x52D5;&#x753B;&#x751F;&#x6210;AI&#x6700;&#x524D;&#x7DDA;&#xFF1A;Sora 2&#x30FB;Seedance 2.0&#x30FB;Kling O1&#x3092;&#x6620;&#x50CF;&#x73FE;&#x5834;&#x3067;&#x6BD4;&#x8F03;&#x30C6;&#x30B9;&#x30C8;</div>
+      <div class="card-summary">ITmedia&#x304C;&#x3001;&#x6700;&#x65B0;&#x306E;&#x52D5;&#x753B;&#x751F;&#x6210;AI&#x30C4;&#x30FC;&#x30EB;&#x300CSora 2&#x300D;&#x300CSeedance 2.0&#x300D;&#x300CKling O1&#x300D;&#x3092;&#x6620;&#x50CF;&#x5236;&#x4F5C;&#x306E;&#x73FE;&#x5834;&#x76EE;&#x7DDA;&#x3067;&#x6BD4;&#x8F03;&#x691C;&#x8A3C;&#x3057;&#x305F;&#x8A18;&#x4E8B;&#x3092;&#x6382;&#x8F09;&#x3057;&#x305F;&#x3002;&#x5404;&#x30C4;&#x30FC;&#x30EB;&#x306E;&#x6620;&#x50CF;&#x54C1;&#x8CEA;&#x30FB;&#x64CD;&#x4F5C;&#x6027;&#x30FB;&#x751F;&#x6210;&#x901F;&#x5EA6;&#x306A;&#x3069;&#x304C;&#x5B9F;&#x4F8B;&#x3068;&#x3068;&#x3082;&#x306B;&#x7D39;&#x4ECB;&#x3055;&#x308C;&#x3066;&#x304A;&#x308A;&#x3001;&#x5B9F;&#x52D9;&#x6D3B;&#x7528;&#x3092;&#x691C;&#x8A0E;&#x3059;&#x308B;&#x30AF;&#x30EA;&#x30A8;&#x30A4;&#x30BF;&#x30FC;&#x306B;&#x3068;&#x3063;&#x3066;&#x53C2;&#x8003;&#x306B;&#x306A;&#x308B;&#x5185;&#x5BB9;&#x3068;&#x306A;&#x3063;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://www.itmedia.co.jp/news/articles/2602/26/news065.html" rel="noopener noreferrer" target="_blank">ITmedia NEWS</a></div>
     </div>
 
-    <div class="archive">
-      <h3>📅 過去のダイジェスト</h3>
-      <ul id="archive-list">
-        <li><span style="color:var(--text-secondary);font-size:13px;">明日以降のアーカイブがここに表示されます</span></li>
-      </ul>
+    <div class="card">
+      <div class="card-title">2026&#x5E746&#x6708;&#x306EAI&#x30E2;&#x30C7;&#x30EB;&#x6700;&#x65B0;&#x52D5;&#x5411;&#xFF1A;Gemini&#x30FB;Codestral&#x30FB;&#x30AA;&#x30FC;&#x30D7;&#x30F3;&#x30E2;&#x30C7;&#x30EB;&#x304C;&#x7D9A;&#x3005;&#x767B;&#x5834;</div>
+      <div class="card-summary">2026&#x5E746&#x6708;&#x3082;&#x4E3B;&#x8981;AI&#x30E2;&#x30C7;&#x30EB;&#x306E;&#x30EA;&#x30EA;&#x30FC;&#x30B9;&#x304C;&#x7D9A;&#x3044;&#x3066;&#x304A;&#x308A;&#x3001;Google&#x306EGemini&#x6700;&#x65B0;&#x7248;&#x3001;Mistral AI&#x306ECodestral&#x3001;&#x305D;&#x3057;&#x3066;&#x5404;&#x7A2E;&#x30AA;&#x30FC;&#x30D7;&#x30F3;&#x30BD;&#x30FC;&#x30B9;&#x30E2;&#x30C7;&#x30EB;&#x304C;&#x76F8;&#x6B21;&#x3044;&#x3067;&#x516C;&#x958B;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x3002;&#x7279;&#x306B;&#x30AA;&#x30FC;&#x30D7;&#x30F3;&#x30E2;&#x30C7;&#x30EB;&#x306E;&#x53F0;&#x982D;&#x306B;&#x3088;&#x308A;&#x3001;&#x4F01;&#x696D;&#x304C;&#x81EA;&#x793E;&#x74B0;&#x5883;&#x3067;AI&#x3092;&#x904B;&#x7528;&#x3057;&#x3084;&#x3059;&#x304F;&#x306A;&#x308B;&#x6D41;&#x308C;&#x304C;&#x52A0;&#x901F;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://llm-stats.com/llm-updates" rel="noopener noreferrer" target="_blank">LLM Stats</a></div>
     </div>
-  </main>
-  <footer>
-    <p>本ページのニュース要約はAI（Claude, Anthropic Inc.）が自動生成したものです。</p>
-    <p>著作権は各メディア・原著作者に帰属します。詳細は各ソースリンクをご確認ください。</p>
-    <p>正確性・完全性を保証するものではありません。情報提供目的のみ。</p>
-  </footer>
+  </section>
+
+  <section class="section section-it">
+    <h2 class="section-title">&#x1F4BB; IT&#x30FB;PC</h2>
+
+    <div class="card">
+      <div class="card-title">Google I/O 2026 &#x307E;&#x3068;&#x3081;&#xFF1A;Gemini Omni&#x30FB;Gemini 3.5&#x306A;&#x3069;&#x591A;&#x6570;&#x767A;&#x8868;</div>
+      <div class="card-summary">ASCII.jp&#x304CGoogle I/O 2026&#x306E;&#x767A;&#x8868;&#x5185;&#x5BB9;&#x3092;3&#x5206;&#x3067;&#x308F;&#x304B;&#x308B;&#x5F62;&#x5F0F;&#x3067;&#x307E;&#x3068;&#x3081;&#x305F;&#x3002;&#x300CGemini Omni&#x300D;&#x300CGemini 3.5&#x300D;&#x306A;&#x3069;&#x306E;&#x65B0;&#x30E2;&#x30C7;&#x30EB;&#x3084;&#x3001;&#x300CGoogle Antigravity&#x300D;&#x300CGemini Spark&#x300D;&#x3068;&#x3044;&#x3063;&#x305F;&#x65B0;&#x30D7;&#x30ED;&#x30C0;&#x30AF;&#x30C8;&#x304C;&#x516C;&#x958B;&#x3055;&#x308C;&#x305F;&#x3002;AI&#x3092;&#x3042;&#x3089;&#x3086;&#x308BGoogle&#x30B5;&#x30FC;&#x30D3;&#x30B9;&#x306B;&#x6DF1;&#x304F;&#x7D71;&#x5408;&#x3059;&#x308B;&#x59FF;&#x52E2;&#x304C;&#x9AEE;&#x660E;&#x306B;&#x306A;&#x308A;&#x3001;&#x958B;&#x767A;&#x8005;&#x5411;&#x3051;&#x306EAPI&#x3084;&#x30C4;&#x30FC;&#x30EB;&#x3082;&#x5927;&#x5E45;&#x306B;&#x62E1;&#x5145;&#x3055;&#x308C;&#x305F;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://ascii.jp/elem/000/004/403/4403454/" rel="noopener noreferrer" target="_blank">ASCII.jp</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2026&#x5E74;&#x30C6;&#x30C3;&#x30AF;&#x696D;&#x754C;&#x4E88;&#x6E2C;&#x300CAI&#x3068;&#x30AF;&#x30E9;&#x30A6;&#x30C9;&#x7DE8;&#x300D;&#xFF1A;&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;&#x578B;AI&#x304C;&#x4F01;&#x696D;&#x5909;&#x9769;&#x3092;&#x52A0;&#x901F;</div>
+      <div class="card-summary">ASCII.jp&#x304C;2026&#x5E74;&#x306E;&#x30C6;&#x30C3;&#x30AF;&#x696D;&#x754C;&#x52D5;&#x5411;&#x3092;&#x4E88;&#x6E2C;&#x3057;&#x305F;&#x7279;&#x96C6;&#x8A18;&#x4E8B;&#x3067;&#x3001;&#x751F;&#x6210;AI&#x3068;&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;&#x578B;AI&#x304C;&#x30A8;&#x30F3;&#x30BF;&#x30FC;&#x30D7;&#x30E9;&#x30A4;&#x30BA;&#x9818;&#x57DF;&#x3067;&#x6025;&#x52A0;&#x901F;&#x3057;&#x3066;&#x3044;&#x308B;&#x3053;&#x3068;&#x3092;&#x89E3;&#x8AAC;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;AI&#x306F;&#x5358;&#x306A;&#x308B;&#x696D;&#x52D9;&#x81EA;&#x52D5;&#x5316;&#x3092;&#x8D85;&#x3048;&#x3001;&#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x306E;&#x30CB;&#x30FC;&#x30BA;&#x3092;&#x4E88;&#x6E2C;&#x3057;&#x3066;&#x81EA;&#x5F8B;&#x7684;&#x306B;&#x884C;&#x52D5;&#x3059;&#x308B;&#x6BB5;&#x968E;&#x3078;&#x79FB;&#x884C;&#x3057;&#x3064;&#x3064;&#x3042;&#x308B;&#x3002;&#x30AF;&#x30E9;&#x30A6;&#x30C9;&#x3068;AI&#x306E;&#x878D;&#x5408;&#x304C;&#x4F01;&#x696D;&#x306E;&#x7AF6;&#x4E89;&#x529B;&#x3092;&#x5DE6;&#x53F3;&#x3059;&#x308B;&#x5E74;&#x306B;&#x306A;&#x308B;&#x3068;&#x306E;&#x898B;&#x65B9;&#x304C;&#x793A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://ascii.jp/elem/000/004/363/4363932/" rel="noopener noreferrer" target="_blank">ASCII.jp</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2026&#x5E74;&#x7248;&#xFF1A;&#x958B;&#x767A;&#x8005;&#x751F;&#x7523;&#x6027;&#x30C4;&#x30FC;&#x30EB;14&#x9078; &#x2014; GitHub Copilot&#x30FB;Cursor&#x30FB;Claude Code&#x304C;&#x4E0A;&#x4F4D;</div>
+      <div class="card-summary">Greptile&#x304C;2026&#x5E74;&#x306E;&#x30D9;&#x30B9;&#x30C8;&#x958B;&#x767A;&#x8005;&#x5411;&#x3051;&#x751F;&#x7523;&#x6027;&#x30C4;&#x30FC;&#x30EB;14&#x672C;&#x3092;&#x6BD4;&#x8F03;&#x5206;&#x6790;&#x3057;&#x305F;&#x3002;GitHub Copilot&#x30FB;Cursor&#x30FB;Claude Code&#x30FB;Greptile&#x81EA;&#x8EAB;&#x306A;&#x3069;AI&#x642D;&#x8F09;&#x30C4;&#x30FC;&#x30EB;&#x304C;&#x4E0A;&#x4F4D;&#x3092;&#x5360;&#x3081;&#x3001;AI&#x958B;&#x767A;&#x30C4;&#x30FC;&#x30EB;&#x306F;&#x30D7;&#x30ED;&#x30C0;&#x30AF;&#x30C6;&#x30A3;&#x30D3;&#x30C6;&#x30A3;&#x30AB;&#x30C6;&#x30B4;&#x30EA;&#x3067;&#x6700;&#x3082;&#x6025;&#x6210;&#x9577;&#x3057;&#x3066;&#x3044;&#x308B;&#x30B8;&#x30E3;&#x30F3;&#x30EB;&#x3068;&#x306A;&#x3063;&#x305F;&#x3002;Stack Overflow&#x306E;&#x8ABF;&#x67FB;&#x3067;&#x306F;&#x958B;&#x767A;&#x8005;&#x306E;76%&#x304CAI&#x30C4;&#x30FC;&#x30EB;&#x3092;&#x6D3B;&#x7528;&#x30FB;&#x691C;&#x8A0E;&#x4E2D;&#x3068;&#x56DE;&#x7B54;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://www.greptile.com/content-library/14-best-developer-productivity-tools" rel="noopener noreferrer" target="_blank">Greptile</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">OpenClaw&#xFF1A;GitHub&#x3067;&#x53F2;&#x4E0A;&#x6700;&#x901F;25&#x4E07;&#x30B9;&#x30BF;&#x30FC;&#x7372;&#x5F97;&#x306EAI&#x751F;&#x7523;&#x6027;&#x30C4;&#x30FC;&#x30EB;&#x304C;&#x8A71;&#x984C;</div>
+      <div class="card-summary">&#x300COpenClaw&#x300D;&#x3068;&#x547C;&#x3070;&#x308C;&#x308B;&#x65B0;&#x3057;&#x3044;AI&#x751F;&#x7523;&#x6027;&#x30C4;&#x30FC;&#x30EB;&#x304C;&#x767B;&#x5834;&#x3057;&#x3001;&#x308F;&#x305A;&#x304B;2&#x30F6;&#x6708;&#x3067;GitHub&#x4E0A;&#x306B;25&#x4E07;&#x30B9;&#x30BF;&#x30FC;&#x3092;&#x96C6;&#x3081;&#x3001;GitHub&#x53F2;&#x4E0A;&#x6700;&#x901F;&#x306E;&#x6210;&#x9577;&#x3092;&#x8A18;&#x9332;&#x3057;&#x305F;&#x3068;&#x5831;&#x544A;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x3002;Cursor&#x30FB;Perplexity&#x3068;&#x3068;&#x3082;&#x306B;2026&#x5E74;&#x306E;&#x6CE8;&#x76EE;AI&#x30C4;&#x30FC;&#x30EB;&#x306E;&#x4E00;&#x3064;&#x306B;&#x6319;&#x3052;&#x3089;&#x308C;&#x3066;&#x304A;&#x308A;&#x3001;&#x30AF;&#x30EA;&#x30A8;&#x30A4;&#x30C6;&#x30A3;&#x30D6;&#x30FB;&#x30D3;&#x30B8;&#x30CD;&#x30B9;&#x4E21;&#x9762;&#x3067;&#x306E;&#x751F;&#x7523;&#x6027;&#x6539;&#x5584;&#x306B;&#x8CA2;&#x732E;&#x3059;&#x308B;&#x3068;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://syscallnews.com/ai-software/top-5-ai-tools-revolutionizing-productivity-in-2026.html" rel="noopener noreferrer" target="_blank">Syscall News</a></div>
+    </div>
+  </section>
+
+  <section class="section section-tool">
+    <h2 class="section-title">&#x1F4F1; &#x30B9;&#x30DE;&#x30DB;&#x30FB;&#x30C4;&#x30FC;&#x30EB;</h2>
+
+    <div class="card">
+      <div class="card-title">Android Show I/O 2026&#xFF1A;Gemini&#x304CAndroid&#x306B;&#x6DF1;&#x304F;&#x7D71;&#x5408;&#x3001;&#x81EA;&#x52D5;&#x5165;&#x529B;&#x3084;&#x300CRambler&#x300D;&#x6A5F;&#x80FD;&#x304C;&#x767B;&#x5834;</div>
+      <div class="card-summary">Google&#x306F;&#x300CThe Android Show: I/O Edition 2026&#x300D;&#x3067;&#x3001;Gemini&#x3092;&#x6D3B;&#x7528;&#x3057;&#x305F;&#x65B0;&#x6A5F;&#x80FD;&#x7FA4;&#x3092;&#x767A;&#x8868;&#x3057;&#x305F;&#x3002;&#x65B0;&#x3057;&#x3044;&#x81EA;&#x52D5;&#x5165;&#x529B;&#x6A5F;&#x80FD;&#x306F;&#x3001;&#x63A5;&#x7D9A;&#x6E08;&#x307F;&#x30A2;&#x30D7;&#x30EA;&#x304B;&#x3089;&#x95A2;&#x9023;&#x60C5;&#x5831;&#x3092;&#x53D6;&#x5F97;&#x3057;&#x3066;&#x30D5;&#x30A9;&#x30FC;&#x30E0;&#x3092;&#x81EA;&#x52D5;&#x3067;&#x57CB;&#x3081;&#x308B;&#x3002;&#x307E;&#x305F;&#x300CRambler&#x300D;&#x306F;&#x97F3;&#x58F0;&#x5165;&#x529B;&#x3055;&#x308C;&#x305F;&#x8A71;&#x3057;&#x8A00;&#x8449;&#x3092;&#x81EA;&#x52D5;&#x7684;&#x306B;&#x6574;&#x5F62;&#x3057;&#x3001;&#x7C21;&#x6F54;&#x306A;&#x30E1;&#x30C3;&#x30BB;&#x30FC;&#x30B8;&#x306B;&#x5909;&#x63DB;&#x3059;&#x308B;&#x6A5F;&#x80FD;&#x3067;&#x3001;&#x97F3;&#x58F0;&#x30B3;&#x30DF;&#x30E5;&#x30CB;&#x30B1;&#x30FC;&#x30B7;&#x30E7;&#x30F3;&#x306E;&#x52B9;&#x7387;&#x3092;&#x5927;&#x5E45;&#x306B;&#x9AD8;&#x3081;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://blog.google/intl/ja-jp/products/android-chrome-play/android-show-io-edition-2026/" rel="noopener noreferrer" target="_blank">Google Japan Blog</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Android 2026&#x5E746&#x6708;&#x30B7;&#x30B9;&#x30C6;&#x30E0;&#x30A2;&#x30C3;&#x30D7;&#x30C7;&#x30FC;&#x30C8;&#xFF1A;Play&#x30B9;&#x30C8;&#x30A2;&#x4E8B;&#x524D;&#x767B;&#x9332;&#x3068;&#x81EA;&#x52D5;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x6A5F;&#x80FD;&#x306A;&#x3069;6&#x9805;&#x76EE;</div>
+      <div class="card-summary">Google&#x304C;2026&#x5E746&#x6708;&#x306EAndroid&#x5B9A;&#x671F;&#x30B7;&#x30B9;&#x30C6;&#x30E0;&#x30A2;&#x30C3;&#x30D7;&#x30C7;&#x30FC;&#x30C8;&#x3092;&#x914D;&#x4FE1;&#x3057;&#x305F;&#x3002;&#x4E3B;&#x306A;&#x65B0;&#x6A5F;&#x80FD;&#x3068;&#x3057;&#x3066;&#x3001;Play&#x30B9;&#x30C8;&#x30A2;&#x3067;&#x30A2;&#x30D7;&#x30EA;&#x3092;&#x4E8B;&#x524D;&#x767B;&#x9332;&#x3057;&#x3066;&#x81EA;&#x52D5;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x3059;&#x308B;&#x65B0;&#x3057;&#x3044;&#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x30D5;&#x30ED;&#x30FC;&#x3001;&#x6BCE;&#x6708;&#x306EPlay&#x30B9;&#x30C8;&#x30A2;&#x30C1;&#x30E3;&#x30EC;&#x30F3;&#x30B8;&#x3092;&#x30DD;&#x30C3;&#x30D7;&#x30A2;&#x30C3;&#x30D7;&#x3067;&#x901A;&#x77E5;&#x3059;&#x308B;&#x6A5F;&#x80FD;&#x306A;&#x3069;&#x304C;&#x8FFD;&#x52A0;&#x3055;&#x308C;&#x305F;&#x3002;&#x30A2;&#x30D7;&#x30EA;&#x8D77;&#x52D5;&#x901F;&#x5EA6;&#x306E;&#x5411;&#x4E0A;&#x3082;&#x76DB;&#x308A;&#x8FBC;&#x307E;&#x308C;&#x3066;&#x304A;&#x308A;&#x3001;&#x65E5;&#x5E38;&#x7684;&#x306A;&#x64CD;&#x4F5C;&#x306E;&#x5FEB;&#x9069;&#x3055;&#x304C;&#x5897;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://www.bgr.com/2186448/new-features-android-google-system-update-june-2026/" rel="noopener noreferrer" target="_blank">BGR</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Samsung&#x304COne UI 8.5&#x3067;AirDrop&#x4E92;&#x6362;&#x6A5F;&#x80FD;&#x300CQuick Share&#x300D;&#x3092;&#x5F37;&#x5316;&#xFF1A;Galaxy S24&#x4EE5;&#x964D;&#x304C;&#x5BFE;&#x8C61;</div>
+      <div class="card-summary">Samsung&#x306FGalaxy S24&#x30B7;&#x30EA;&#x30FC;&#x30BA;&#x4EE5;&#x964D;&#x306E;&#x30D5;&#x30E9;&#x30C3;&#x30B0;&#x30B7;&#x30C3;&#x30D7;&#x30B9;&#x30DE;&#x30FC;&#x30C8;&#x30D5;&#x30A9;&#x30F3;&#x5411;&#x3051;&#x306B;&#x300COne UI 8.5&#x300D;&#x30A2;&#x30C3;&#x30D7;&#x30C7;&#x30FC;&#x30C8;&#x3092;&#x914D;&#x4FE1;&#x3057;&#x3001;AirDrop&#x3068;&#x4E92;&#x6362;&#x6027;&#x306E;&#x3042;&#x308B;&#x300CQuick Share&#x300D;&#x6A5F;&#x80FD;&#x3092;&#x5F37;&#x5316;&#x3057;&#x305F;&#x3002;&#x3053;&#x308C;&#x306B;&#x3088;&#x308A;&#x3001;iPhone&#x3068;Android&#x9593;&#x3067;&#x306E;&#x30D5;&#x30A1;&#x30A4;&#x30EB;&#x5171;&#x6709;&#x304C;&#x3088;&#x308A;&#x30B9;&#x30E0;&#x30FC;&#x30BA;&#x306B;&#x306A;&#x308A;&#x3001;Google&#x306E;5&#x6708;&#x30B7;&#x30B9;&#x30C6;&#x30E0;&#x30A2;&#x30C3;&#x30D7;&#x30C7;&#x30FC;&#x30C8;&#x3068;&#x306E;&#x7D44;&#x307F;&#x5408;&#x308F;&#x305B;&#x3067;&#x30AF;&#x30ED;&#x30B9;&#x30C7;&#x30D0;&#x30A4;&#x30B9;&#x4F53;&#x9A13;&#x304C;&#x5411;&#x4E0A;&#x3057;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://www.sammyfans.com/2026/05/27/samsung-may-2026-google-play-system-update/" rel="noopener noreferrer" target="_blank">Sammy Fans</a></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Android 17 &#x30D7;&#x30E9;&#x30A4;&#x30D0;&#x30B7;&#x30FC;&#x5F37;&#x5316;&#xFF1A;&#x4E00;&#x6642;&#x7684;&#x306A;&#x4F4D;&#x7F6E;&#x60C5;&#x5831;&#x5171;&#x6709;&#x30DC;&#x30BF;&#x30F3;&#x3092;&#x65B0;&#x642D;&#x8F09;</div>
+      <div class="card-summary">Android 17&#x3067;&#x306F;&#x65B0;&#x305F;&#x306A;&#x30D7;&#x30E9;&#x30A4;&#x30D0;&#x30B7;&#x30FC;&#x4FDD;&#x8B77;&#x6A5F;&#x80FD;&#x3068;&#x3057;&#x3066;&#x300C;&#x4F4D;&#x7F6E;&#x60C5;&#x5831;&#x30DC;&#x30BF;&#x30F3;&#x300D;&#x304C;&#x5C0E;&#x5165;&#x3055;&#x308C;&#x308B;&#x3002;&#x30E6;&#x30FC;&#x30B6;&#x30FC;&#x304C;&#x7279;&#x5B9A;&#x306E;&#x30A2;&#x30D7;&#x30EA;&#x3092;&#x4F7F;&#x7528;&#x3057;&#x3066;&#x3044;&#x308B;&#x9593;&#x3060;&#x3051;&#x3001;&#x7CBE;&#x78BA;&#x306A;&#x4F4D;&#x7F6E;&#x60C5;&#x5831;&#x3092;&#x4E00;&#x6642;&#x7684;&#x306B;&#x5171;&#x6709;&#x3067;&#x304D;&#x308B;&#x4ED5;&#x7D44;&#x307F;&#x3067;&#x3001;&#x8FBA;&#x306E;&#x30AB;&#x30D5;&#x30A7;&#x691C;&#x7D22;&#x306A;&#x3069;&#x77ED;&#x6642;&#x9593;&#x306E;&#x30BF;&#x30B9;&#x30AF;&#x306B;&#x6700;&#x9069;&#x5316;&#x3055;&#x308C;&#x3066;&#x3044;&#x308B;&#x3002;&#x5E38;&#x6642;&#x4F4D;&#x7F6E;&#x60C5;&#x5831;&#x3092;&#x8A31;&#x53EF;&#x3059;&#x308B;&#x3053;&#x3068;&#x306A;&#x304F;&#x4FBF;&#x5229;&#x6027;&#x3092;&#x4FDD;&#x3066;&#x308B;&#x8A2D;&#x8A08;&#x3067;&#x3001;&#x30D7;&#x30E9;&#x30A4;&#x30D0;&#x30B7;&#x30FC;&#x3078;&#x306E;&#x95A2;&#x5FC3;&#x304C;&#x9AD8;&#x307E;&#x308B;&#x4E2D;&#x3067;&#x6CE8;&#x76EE;&#x3092;&#x96C6;&#x3081;&#x3066;&#x3044;&#x308B;&#x3002;</div>
+      <div class="card-source">&#x30BD;&#x30FC;&#x30B9;: <a href="https://blog.google/security/whats-new-in-android-security-privacy-2026/" rel="noopener noreferrer" target="_blank">Google Security Blog</a></div>
+    </div>
+  </section>
+
+  <div class="archive">
+    <h2>&#x1F4C2; &#x904E;&#x53BB;7&#x65E5;&#x5206;&#x306E;&#x30A2;&#x30FC;&#x30AB;&#x30A4;&#x30D6;</h2>
+    <ul>
+      <li><a href="archive/2026-06-14.html">2026-06-14</a></li>
+      <li><a href="archive/2026-06-13.html">2026-06-13</a></li>
+      <li><a href="archive/2026-06-12.html">2026-06-12</a></li>
+      <li><a href="archive/2026-06-11.html">2026-06-11</a></li>
+      <li><a href="archive/2026-06-10.html">2026-06-10</a></li>
+      <li><a href="archive/2026-06-09.html">2026-06-09</a></li>
+      <li><a href="archive/2026-06-08.html">2026-06-08</a></li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    &#x672C;&#x30DA;&#x30FC;&#x30B8;&#x306E;&#x30CB;&#x30E5;&#x30FC;&#x30B9;&#x8981;&#x7D04;&#x306FAI&#xFF08;Claude, Anthropic Inc.&#xFF09;&#x304C;&#x81EA;&#x52D5;&#x751F;&#x6210;&#x3057;&#x305F;&#x3082;&#x306E;&#x3067;&#x3059;&#x3002;&#x8457;&#x4F5C;&#x6A29;&#x306F;&#x5404;&#x30E1;&#x30C7;&#x30A3;&#x30A2;&#x30FB;&#x539F;&#x8457;&#x4F5C;&#x8005;&#x306B;&#x5E30;&#x5C5E;&#x3057;&#x307E;&#x3059;&#x3002;&#x8A73;&#x7D30;&#x306F;&#x5404;&#x30BD;&#x30FC;&#x30B9;&#x30EA;&#x30F3;&#x30AF;&#x3092;&#x3054;&#x78BA;&#x8A8D;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;&#x60C5;&#x5831;&#x63D0;&#x4F9B;&#x76EE;&#x7684;&#x306E;&#x307F;&#x3002;
+  </div>
+</div>
 </body>
 </html>
