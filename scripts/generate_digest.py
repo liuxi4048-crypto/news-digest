@@ -1,47 +1,70 @@
-import anthropic
 import base64
+import feedparser
 import json
 import os
 import sys
 import urllib.request
+import urllib.error
 from datetime import datetime, timezone, timedelta
+from google import genai
+from google.genai import types
 
 JST = timezone(timedelta(hours=9))
 
-def search_news(client, query):
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=2000,
-        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 3}],
-        messages=[{"role": "user", "content": f"Search for latest news: {query}. Date: {datetime.now(JST).strftime('%Y-%m-%d')}"}]
-    )
-    for block in response.content:
-        if hasattr(block, "text"):
-            return block.text
-    return ""
+RSS_FEEDS = [
+    "https://gigazine.net/news/rss_2.0/",
+    "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml",
+    "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml",
+    "https://pc.watch.impress.co.jp/data/rss/1.0/pcw/feed.rdf",
+    "https://news.mynavi.jp/rss/index.xml",
+]
+
+def fetch_articles(hours=36):
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+    articles = []
+    for url in RSS_FEEDS:
+        try:
+            feed = feedparser.parse(url)
+            source = feed.feed.get("title", url)
+            for entry in feed.entries[:15]:
+                published = None
+                if hasattr(entry, "published_parsed") and entry.published_parsed:
+                    try:
+                        published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                    except Exception:
+                        pass
+                if published is None or published >= cutoff:
+                    articles.append({
+                        "title": entry.get("title", "").strip(),
+                        "link": entry.get("link", ""),
+                        "summary": entry.get("summary", "")[:300].strip(),
+                        "source": source,
+                    })
+        except Exception as e:
+            print(f"Feed error {url}: {e}", file=sys.stderr)
+    return articles
 
 def generate_digest():
     today = datetime.now(JST)
     today_str = today.strftime("%Y年%m月%d日")
     today_iso = today.strftime("%Y-%m-%d")
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    ai_news = search_news(client, f"生成AI LLM AI新製品 最新ニュース {today_iso}")
-    it_news = search_news(client, f"テクノロジー クラウド セキュリティ 最新 {today_iso}")
-    sp_news = search_news(client, f"スマートフォン アプリ 便利ツール 新機能 {today_iso}")
+    articles = fetch_articles()
+    if not articles:
+        raise RuntimeError("No articles fetched from RSS feeds")
 
-    prompt = f"""今日（{today_str}）のニュースダイジェストを作成してください。
+    articles_text = "\n\n".join(
+        f"[{a['source']}]\nタイトル: {a['title']}\nURL: {a['link']}\n概要: {a['summary']}"
+        for a in articles[:40]
+    )
 
-AI関連ニュース:
-{ai_news}
+    client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
-IT/PCニュース:
-{it_news}
+    prompt = f"""以下は本日（{today_str}）取得した日本のテクノロジーニュース記事の一覧です。
 
-スマホ・ツールニュース:
-{sp_news}
+{articles_text}
 
-以下の完全なHTMLドキュメントを出力してください:
+これらから各カテゴリ3〜5件を選んで以下の完全なHTMLドキュメントを出力してください。HTMLのみを出力し、マークダウンのコードブロックは絶対に使わないでください。
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -63,32 +86,39 @@ footer{{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:.8e
 </head>
 <body>
 <h1>📰 Daily Digest — {today_str} 09:00 JST</h1>
-<p class="date">自動生成 by AI（Claude, Anthropic Inc.）| 著作権は各メディア・原著作者に帰属</p>
+<p class="date">自動生成 by AI（Gemini, Google LLC）| 著作権は各メディア・原著作者に帰属</p>
+
 <h2>🤖 AI</h2>
-[各3〜5件の記事を div.article 形式で]
+
+（生成AI・LLM・AIサービス関連を3〜5件）
+
 <h2>💻 IT/PC</h2>
-[各3〜5件の記事を div.article 形式で]
+
+（クラウド・セキュリティ・PC・ソフトウェア関連を3〜5件）
+
 <h2>📱 スマホ・ツール</h2>
-[各3〜5件の記事を div.article 形式で]
+
+（スマートフォン・アプリ・ガジェット関連を3〜5件）
+
 <footer>
 <p>このサイトはGitHub Actionsにより毎日09:00 JSTに自動更新されます。</p>
-<p>要約はAI（Claude, Anthropic Inc.）が自動生成。著作権は各メディア・原著作者に帰属。情報提供目的のみ。</p>
+<p>要約はAI（Gemini, Google LLC）が自動生成。著作権は各メディア・原著作者に帰属。情報提供目的のみ。</p>
 </footer>
 </body>
 </html>
 
 各記事は以下の形式で出力:
 <div class="article">
-  <h3><a href="[URL]" target="_blank">[タイトル]</a></h3>
-  <p>[3〜5行の日本語要約]</p>
+<h3><a href="[元記事のURL]" target="_blank">[記事タイトル]</a></h3>
+<p>[3〜5行の日本語要約]</p>
 </div>"""
 
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=8000,
-        messages=[{"role": "user", "content": prompt}]
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(max_output_tokens=8000),
     )
-    html = response.content[0].text
+    html = response.text
     if "<!DOCTYPE" in html:
         start = html.index("<!DOCTYPE")
         end = html.rindex("</html>") + 7
@@ -100,7 +130,7 @@ def api_call(path, method="GET", data=None):
         "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
         "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
     url = f"https://api.github.com{path}"
     body = json.dumps(data).encode() if data else None
@@ -125,7 +155,7 @@ def main():
     result = api_call(f"/repos/{repo}/contents/archive/{yesterday}.html", "PUT", {
         "message": f"Archive {yesterday} digest",
         "content": current_content_b64,
-        "branch": "main"
+        "branch": "main",
     })
     if result.get("error") == "conflict":
         print(f"Archive {yesterday} already exists, skipping", file=sys.stderr)
@@ -135,7 +165,7 @@ def main():
         "message": f"Update digest {today_iso}",
         "content": new_b64,
         "sha": current_sha,
-        "branch": "main"
+        "branch": "main",
     })
     print(f"Done: {today_iso}", file=sys.stderr)
 

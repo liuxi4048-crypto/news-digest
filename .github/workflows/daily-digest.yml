@@ -18,11 +18,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - run: pip install anthropic
+      - run: pip install google-genai feedparser
 
       - name: Generate digest
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python scripts/generate_digest.py
