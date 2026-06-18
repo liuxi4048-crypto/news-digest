@@ -25,7 +25,7 @@ def fetch_articles(hours=36):
         try:
             feed = feedparser.parse(url)
             source = feed.feed.get("title", url)
-            for entry in feed.entries[:15]:
+            for entry in feed.entries[:8]:
                 published = None
                 if hasattr(entry, "published_parsed") and entry.published_parsed:
                     try:
@@ -36,7 +36,7 @@ def fetch_articles(hours=36):
                     articles.append({
                         "title": entry.get("title", "").strip(),
                         "link": entry.get("link", ""),
-                        "summary": entry.get("summary", "")[:300].strip(),
+                        "summary": entry.get("summary", "")[:100].strip(),
                         "source": source,
                     })
         except Exception as e:
@@ -54,7 +54,7 @@ def generate_digest():
 
     articles_text = "\n\n".join(
         f"[{a['source']}]\nタイトル: {a['title']}\nURL: {a['link']}\n概要: {a['summary']}"
-        for a in articles[:40]
+        for a in articles[:20]
     )
 
     client = Groq(api_key=os.environ["GROQ_API_KEY"])
