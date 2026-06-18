@@ -6,8 +6,7 @@ import sys
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
-from google import genai
-from google.genai import types
+from groq import Groq
 
 JST = timezone(timedelta(hours=9))
 
@@ -58,7 +57,7 @@ def generate_digest():
         for a in articles[:40]
     )
 
-    client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
+    client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
     prompt = f"""以下は本日（{today_str}）取得した日本のテクノロジーニュース記事の一覧です。
 
@@ -86,7 +85,7 @@ footer{{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:.8e
 </head>
 <body>
 <h1>📰 Daily Digest — {today_str} 09:00 JST</h1>
-<p class="date">自動生成 by AI（Gemini, Google LLC）| 著作権は各メディア・原著作者に帰属</p>
+<p class="date">自動生成 by AI（Llama, Meta）| 著作権は各メディア・原著作者に帰属</p>
 
 <h2>🤖 AI</h2>
 
@@ -102,7 +101,7 @@ footer{{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:.8e
 
 <footer>
 <p>このサイトはGitHub Actionsにより毎日09:00 JSTに自動更新されます。</p>
-<p>要約はAI（Gemini, Google LLC）が自動生成。著作権は各メディア・原著作者に帰属。情報提供目的のみ。</p>
+<p>要約はAI（Llama, Meta）が自動生成。著作権は各メディア・原著作者に帰属。情報提供目的のみ。</p>
 </footer>
 </body>
 </html>
@@ -113,12 +112,12 @@ footer{{margin-top:40px;padding-top:20px;border-top:1px solid #ddd;font-size:.8e
 <p>[3〜5行の日本語要約]</p>
 </div>"""
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-        config=types.GenerateContentConfig(max_output_tokens=8000),
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=8000,
     )
-    html = response.text
+    html = response.choices[0].message.content
     if "<!DOCTYPE" in html:
         start = html.index("<!DOCTYPE")
         end = html.rindex("</html>") + 7

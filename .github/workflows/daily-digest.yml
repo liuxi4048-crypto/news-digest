@@ -18,11 +18,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - run: pip install google-genai feedparser
+      - run: pip install groq feedparser
 
       - name: Generate digest
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python scripts/generate_digest.py
