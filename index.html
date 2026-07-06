@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Digest — AI・IT最新情報</title>
-  <meta name="description" content="AI・IT・PC/スマホツールの最新ニュースを毎朝9時に自動配信">
+  <title>Daily Digest — 海外AI・IT最新情報</title>
+  <meta name="description" content="海外ソースを3サイト以上で照合したAI・SaaS・IT最新情報を毎朝8時に日本語で自動配信">
   <style>
     :root {
       --bg: #f5f5f5;
@@ -13,11 +13,11 @@
       --text-secondary: #666;
       --border: #e0e0e0;
       --ai: #4f46e5;
-      --it: #0891b2;
-      --tool: #059669;
+      --saas: #0891b2;
+      --it: #059669;
       --ai-bg: #eef2ff;
-      --it-bg: #ecfeff;
-      --tool-bg: #d1fae5;
+      --saas-bg: #ecfeff;
+      --it-bg: #d1fae5;
       --radius: 12px;
     }
     @media (prefers-color-scheme: dark) {
@@ -28,8 +28,8 @@
         --text-secondary: #94a3b8;
         --border: #334155;
         --ai-bg: #1e1b4b;
-        --it-bg: #0c2231;
-        --tool-bg: #052e16;
+        --saas-bg: #0c2231;
+        --it-bg: #052e16;
       }
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -63,9 +63,9 @@
       display: inline-block;
       margin-bottom: 12px;
     }
-    .ai .section-title   { color: var(--ai);  background: var(--ai-bg); }
-    .it .section-title   { color: var(--it);  background: var(--it-bg); }
-    .tool .section-title { color: var(--tool); background: var(--tool-bg); }
+    .ai .section-title   { color: var(--ai);   background: var(--ai-bg); }
+    .saas .section-title { color: var(--saas); background: var(--saas-bg); }
+    .it .section-title   { color: var(--it);   background: var(--it-bg); }
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -75,32 +75,44 @@
     }
     .card h2 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
     .card p  { font-size: 14px; color: var(--text-secondary); margin-bottom: 10px; }
-    .card a  {
+    .sources { border-top: 1px dashed var(--border); padding-top: 8px; }
+    .sources .label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .sources ul { list-style: none; }
+    .sources li { margin-bottom: 3px; }
+    .sources a {
       font-size: 13px;
       color: var(--ai);
       text-decoration: none;
       word-break: break-all;
     }
-    .card a:hover { text-decoration: underline; }
-    .error-card {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
+    .sources a:hover { text-decoration: underline; }
+    .notice-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 20px;
       text-align: center;
-      color: #b91c1c;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
     }
-    .archive {
+    .all-sources, .archive {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px;
       margin-bottom: 28px;
     }
-    .archive h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
-    .archive ul { list-style: none; }
-    .archive li { margin-bottom: 6px; }
-    .archive a  { font-size: 13px; color: var(--ai); text-decoration: none; }
+    .all-sources h3, .archive h3 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+    .all-sources ul, .archive ul { list-style: none; }
+    .all-sources li, .archive li { margin-bottom: 6px; font-size: 13px; }
+    .all-sources a, .archive a { font-size: 13px; color: var(--ai); text-decoration: none; }
     footer {
       text-align: center;
       padding: 24px 16px;
@@ -113,52 +125,76 @@
 </head>
 <body>
   <header>
-    <h1>📰 Daily Digest</h1>
-    <div class="meta">初期セットアップ完了 — 明日9:00 JSTより自動配信開始</div>
+    <h1>📰 Daily Digest — 海外AI・IT最新情報</h1>
+    <div class="meta">セットアップ完了 — 毎朝8:00 JSTに自動配信（海外3ソース以上で照合済み）</div>
   </header>
   <main>
-    <div class="error-card">
-      <p>🚀 セットアップ完了</p>
-      <p style="margin-top:8px;font-size:13px;">毎朝9:00 JSTに最新のAI・IT・スマホツール情報が自動更新されます。</p>
+    <div class="notice-card">
+      <p>🚀 新システムのセットアップが完了しました</p>
+      <p style="margin-top:8px;font-size:13px;">毎朝8:00 JSTに、海外サイトから収集し3ソース以上で照合したAI（メイン）・SaaS・IT情報が日本語で自動更新されます。</p>
     </div>
 
     <div class="section ai">
       <div class="section-title">🤖 AI</div>
       <div class="card">
-        <h2>サンプル記事タイトル</h2>
-        <p>ここに3〜5行の日本語要約が自動生成されます。各記事はカテゴリ別に整理され、スマホでも読みやすく表示されます。</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">ソースを読む →</a>
+        <h2>サンプル: AIカテゴリのトピックがここに表示されます</h2>
+        <p>海外の複数サイトで照合済みのAI最新情報が、3〜5行の日本語要約で毎朝6件以上掲載されます。</p>
+        <div class="sources">
+          <div class="label">ソース（照合済み・3件以上）</div>
+          <ul>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">ソース記事1 — example.com</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">ソース記事2 — example.org</a></li>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">ソース記事3 — example.net</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section saas">
+      <div class="section-title">☁️ SaaS・ツール</div>
+      <div class="card">
+        <h2>サンプル: 便利なSaaS・ツール情報がここに表示されます</h2>
+        <p>新しいSaaSプロダクトやツールのリリース情報が毎朝2〜3件掲載されます。</p>
+        <div class="sources">
+          <div class="label">ソース（照合済み・3件以上）</div>
+          <ul>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">ソース記事 — example.com</a></li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <div class="section it">
-      <div class="section-title">💻 IT・PC</div>
+      <div class="section-title">💻 IT全般</div>
       <div class="card">
-        <h2>サンプル記事タイトル</h2>
-        <p>IT・PCカテゴリのニュースが毎朝自動収集・要約されます。</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">ソースを読む →</a>
+        <h2>サンプル: IT全般のトピックがここに表示されます</h2>
+        <p>インフラ・セキュリティ・開発などIT全般の重要ニュースが毎朝2〜3件掲載されます。</p>
+        <div class="sources">
+          <div class="label">ソース（照合済み・3件以上）</div>
+          <ul>
+            <li><a href="#" target="_blank" rel="noopener noreferrer">ソース記事 — example.com</a></li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <div class="section tool">
-      <div class="section-title">📱 スマホ・ツール</div>
-      <div class="card">
-        <h2>サンプル記事タイトル</h2>
-        <p>スマホアプリや便利ツールの最新情報が自動配信されます。</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">ソースを読む →</a>
-      </div>
+    <div class="all-sources">
+      <h3>📡 本日の参照ソース一覧</h3>
+      <ul>
+        <li><span style="color:var(--text-secondary);">初回配信後、その日に巡回・照合した全サイトがここに表示されます</span></li>
+      </ul>
     </div>
 
     <div class="archive">
-      <h3>📅 過去のダイジェスト</h3>
+      <h3>📅 過去のダイジェスト（無期限保存）</h3>
       <ul id="archive-list">
-        <li><span style="color:var(--text-secondary);font-size:13px;">明日以降のアーカイブがここに表示されます</span></li>
+        <li><span style="color:var(--text-secondary);font-size:13px;">配信開始後のアーカイブがここに蓄積されます</span></li>
       </ul>
     </div>
   </main>
   <footer>
     <p>本ページのニュース要約はAI（Claude, Anthropic Inc.）が自動生成したものです。</p>
-    <p>著作権は各メディア・原著作者に帰属します。詳細は各ソースリンクをご確認ください。</p>
+    <p>すべてのトピックは海外の独立した3ソース以上で照合しています。著作権は各メディア・原著作者に帰属します。</p>
     <p>正確性・完全性を保証するものではありません。情報提供目的のみ。</p>
   </footer>
 </body>
