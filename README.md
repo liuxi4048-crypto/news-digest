@@ -8,7 +8,7 @@
 
 ## 仕組み
 
-1. Claude Code のクラウドルーチンが毎朝 8:00 JST に [prompts/daily_digest.md](prompts/daily_digest.md) を実行
+1. Claude のスケジュールタスク（`daily-news-digest`）が毎朝 8:00 JST に [prompts/daily_digest.md](prompts/daily_digest.md) の手順を実行
 2. 海外サイトのRSSフィード（TechCrunch AI / VentureBeat AI / The Verge AI / Ars Technica / MIT Tech Review / OpenAI・Anthropic・DeepMind 公式 ほか）を直接取得
 3. 話題単位にクラスタリングし、`data/published_topics.json` の掲載履歴（直近60日）と照合して重複を排除
 4. 各トピックを WebSearch で追加照合し、**独立した3ドメイン以上**で確認できたものだけ採用
