@@ -34,6 +34,18 @@ PC の状態に関係なく **GitHub Actions** 上で完全自動実行される
 リポジトリの Settings → Secrets and variables → Actions に `GROQ_API_KEY`（[console.groq.com](https://console.groq.com) の無料枠キー）を登録する。
 Actions の書き込み権限（Settings → Actions → General → Workflow permissions → Read and write）を有効にする。
 
+## スマホ通知（ntfy.sh・無料）
+
+毎朝ダイジェストが公開されると、スマホにプッシュ通知が届き、タップすると公開ページが開く。
+
+1. スマホに [ntfy](https://ntfy.sh/) アプリをインストール（Android: Play ストア / iOS: App Store）
+2. 推測されにくいトピック名を1つ決める（例: `news-digest-xn6w1h8bqky5`。ntfy.sh のトピックは知っている人なら誰でも購読できるため、ランダムな文字列を含めること）
+3. アプリで「＋」→ Subscribe to topic → 決めたトピック名を入力
+4. リポジトリの Settings → Secrets and variables → Actions に `NTFY_TOPIC` という名前でトピック名を登録
+
+`NTFY_TOPIC` が未設定の間は通知ステップは自動的にスキップされる（ダイジェスト生成には影響しない）。
+通知はダイジェストに変更があった日のみ送信される。
+
 ## ポリシー
 
 - 情報源は海外サイトのみ

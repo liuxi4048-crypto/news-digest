@@ -30,10 +30,42 @@ jobs:
         run: python scripts/generate_digest.py
 
       - name: Commit and push
+        id: commit
         run: |
           git config user.name "news-digest-bot"
           git config user.email "actions@users.noreply.github.com"
           git add digests archive index.html data/published_topics.json
-          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "digest: $(date -u -d '+9 hours' +%Y-%m-%d)"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Sends a push notification via ntfy.sh when a new digest was published.
+      # Requires the NTFY_TOPIC secret (see README). Tapping the notification
+      # opens the GitHub Pages site. Never fails the workflow.
+      - name: Notify phone via ntfy
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          if [ -z "$NTFY_TOPIC" ]; then
+            echo "NTFY_TOPIC secret not set; skipping notification"
+            exit 0
+          fi
+          DATE=$(date -u -d '+9 hours' +%Y-%m-%d)
+          COUNT=$(grep -oP '掲載トピック数: \K[0-9]+' "digests/${DATE}.md" || echo "?")
+          # give GitHub Pages a moment to deploy so the tapped link shows today's digest
+          sleep 90
+          jq -n \
+            --arg topic "$NTFY_TOPIC" \
+            --arg title "📰 Daily Digest ${DATE} 更新" \
+            --arg message "本日のダイジェスト（${COUNT}件）を公開しました。タップして開く" \
+            '{topic: $topic, title: $title, message: $message,
+              click: "https://liuxi4048-crypto.github.io/news-digest/",
+              tags: ["newspaper"]}' \
+            | curl -fsS -H "Content-Type: application/json" -d @- https://ntfy.sh \
+            || echo "::warning::ntfy notification failed"
