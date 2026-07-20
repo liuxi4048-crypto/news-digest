@@ -35,6 +35,21 @@ if (-not (Test-Path $RepoPath))  { throw "Repo not found: $RepoPath" }
 if (-not (Test-Path $VaultPath)) { throw "Vault not found: $VaultPath" }
 
 # --- 1. refresh the repo -----------------------------------------------------
+# Everything under obsidian/ is generated output that the CI job also commits.
+# A local run leaves copies behind, and git then refuses to pull ("untracked
+# working tree files would be overwritten"). Discarding them first is safe
+# precisely because step 2 regenerates the whole directory from digests/.
+$generated = Join-Path $RepoPath "obsidian"
+if (Test-Path $generated) {
+    Write-Step "Discarding locally generated notes before pull"
+    git -C $RepoPath clean -fdq -- obsidian
+    # Only restore tracked files; before the first CI run nothing under
+    # obsidian/ is in HEAD and checkout would fail on an unmatched pathspec.
+    if (git -C $RepoPath ls-files -- obsidian) {
+        git -C $RepoPath checkout -q -- obsidian
+    }
+}
+
 Write-Step "Pulling $RepoPath"
 git -C $RepoPath pull --ff-only
 if ($LASTEXITCODE -ne 0) { throw "git pull failed in $RepoPath" }
