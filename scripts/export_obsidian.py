@@ -214,15 +214,15 @@ def build_moc(entries):
         "",
         "# 🗂️ AI News — 索引",
         "",
-        "`news-digest` リポジトリが毎朝 08:00 JST に自動生成したダイジェスト。",
+        "毎朝 08:00 JST に Claude Code が収集・要約したダイジェスト。",
+        "生成元は `news-digest` リポジトリ。",
         "",
     ]
 
     if not entries:
         out += [
             "> [!info] まだノートがない",
-            "> 次回の自動生成を待つか、GitHub Actions の `Daily AI/IT Digest` を",
-            "> 手動実行してから同期スクリプトを走らせる。",
+            "> 次回の自動実行を待つか、Claude Code で `/ai-news-digest` を実行する。",
             "",
         ]
         return "\n".join(out)
