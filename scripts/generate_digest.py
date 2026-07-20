@@ -24,30 +24,62 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEDUP_WINDOW_DAYS = 60
 MIN_TOTAL_TOPICS = 10
 MIN_AI_TOPICS = 6
-MIN_DOMAINS = 3
 
-# category -> list of (feed_url, source_label)
+# Corroboration is a ranking signal, not a hard gate. Requiring 3 independent
+# domains per cluster filtered out literally every topic (all digests up to
+# 2026-07-19 published 0 items), because distinct outlets rarely word a headline
+# similarly enough to cluster. Topics reaching MIN_CORROBORATED_DOMAINS are
+# ranked first and flagged as 裏取り済み; the rest still get published.
+MIN_CORROBORATED_DOMAINS = 2
+
+# Default freshness window. High-volume news feeds refresh constantly, but
+# first-party research/lab blogs post weekly at best, so those carry a longer
+# per-feed window (4th tuple element). The 60-day dedup history is what
+# actually prevents repeats, so a wider window costs nothing.
+DEFAULT_WINDOW_HOURS = 72
+SLOW_WINDOW_HOURS = 240
+MAX_ENTRIES_PER_FEED = 40
+
+# category -> list of (feed_url, source_label, window_hours)
+# Verified live on 2026-07-20. Removed: Anthropic RSS, Meta AI, Mistral,
+# Stability, Microsoft AI blog (all 404/410/301-dead), arXiv RSS (empty).
 FEEDS = {
     "ai": [
-        ("https://techcrunch.com/category/artificial-intelligence/feed/", "TechCrunch AI"),
-        ("https://venturebeat.com/category/ai/feed/", "VentureBeat AI"),
-        ("https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "The Verge AI"),
-        ("https://arstechnica.com/ai/feed/", "Ars Technica AI"),
-        ("https://www.technologyreview.com/feed/", "MIT Technology Review"),
-        ("https://openai.com/news/rss.xml", "OpenAI News"),
-        ("https://www.anthropic.com/rss.xml", "Anthropic News"),
-        ("https://deepmind.google/blog/rss.xml", "Google DeepMind Blog"),
-        ("https://hnrss.org/frontpage", "Hacker News"),
+        ("https://techcrunch.com/category/artificial-intelligence/feed/", "TechCrunch AI", DEFAULT_WINDOW_HOURS),
+        ("https://venturebeat.com/feed/", "VentureBeat", DEFAULT_WINDOW_HOURS),
+        ("https://www.theverge.com/rss/ai-artificial-intelligence/index.xml", "The Verge AI", DEFAULT_WINDOW_HOURS),
+        ("https://arstechnica.com/ai/feed/", "Ars Technica AI", DEFAULT_WINDOW_HOURS),
+        ("https://www.technologyreview.com/feed/", "MIT Technology Review", DEFAULT_WINDOW_HOURS),
+        ("https://the-decoder.com/feed/", "The Decoder", DEFAULT_WINDOW_HOURS),
+        ("https://www.techmeme.com/feed.xml", "Techmeme", DEFAULT_WINDOW_HOURS),
+        ("https://www.wired.com/feed/tag/ai/latest/rss", "WIRED AI", DEFAULT_WINDOW_HOURS),
+        ("https://aibusiness.com/rss.xml", "AI Business", DEFAULT_WINDOW_HOURS),
+        ("https://simonwillison.net/atom/everything/", "Simon Willison", DEFAULT_WINDOW_HOURS),
+        ("https://hnrss.org/frontpage", "Hacker News", DEFAULT_WINDOW_HOURS),
+        # First-party labs and research blogs — low frequency, longer window.
+        ("https://openai.com/news/rss.xml", "OpenAI News", SLOW_WINDOW_HOURS),
+        ("https://blog.google/technology/ai/rss/", "Google AI Blog", SLOW_WINDOW_HOURS),
+        ("https://deepmind.google/blog/rss.xml", "Google DeepMind", SLOW_WINDOW_HOURS),
+        ("https://huggingface.co/blog/feed.xml", "Hugging Face", SLOW_WINDOW_HOURS),
+        ("https://research.google/blog/rss/", "Google Research", SLOW_WINDOW_HOURS),
+        ("https://aws.amazon.com/blogs/machine-learning/feed/", "AWS ML Blog", SLOW_WINDOW_HOURS),
+        ("https://blogs.nvidia.com/feed/", "NVIDIA Blog", SLOW_WINDOW_HOURS),
+        ("https://news.mit.edu/rss/topic/artificial-intelligence2", "MIT News AI", SLOW_WINDOW_HOURS),
+        ("https://bair.berkeley.edu/blog/feed.xml", "Berkeley BAIR", SLOW_WINDOW_HOURS),
+        ("https://www.latent.space/feed", "Latent Space", SLOW_WINDOW_HOURS),
+        ("https://magazine.sebastianraschka.com/feed", "Sebastian Raschka", SLOW_WINDOW_HOURS),
+        ("https://importai.substack.com/feed", "Import AI", SLOW_WINDOW_HOURS),
     ],
     "saas": [
-        ("https://www.producthunt.com/feed", "Product Hunt"),
-        ("https://techcrunch.com/category/apps/feed/", "TechCrunch Apps"),
-        ("https://betanews.com/feed/", "BetaNews"),
+        ("https://www.producthunt.com/feed", "Product Hunt", DEFAULT_WINDOW_HOURS),
+        ("https://techcrunch.com/category/apps/feed/", "TechCrunch Apps", DEFAULT_WINDOW_HOURS),
+        ("https://betanews.com/feed/", "BetaNews", DEFAULT_WINDOW_HOURS),
     ],
     "it": [
-        ("https://www.theregister.com/headlines.atom", "The Register"),
-        ("https://feed.infoq.com/", "InfoQ"),
-        ("https://www.zdnet.com/news/rss.xml", "ZDNet"),
+        ("https://www.theregister.com/headlines.atom", "The Register", DEFAULT_WINDOW_HOURS),
+        ("https://feed.infoq.com/", "InfoQ", DEFAULT_WINDOW_HOURS),
+        ("https://www.zdnet.com/news/rss.xml", "ZDNet", DEFAULT_WINDOW_HOURS),
+        ("https://techcrunch.com/feed/", "TechCrunch", DEFAULT_WINDOW_HOURS),
     ],
 }
 
@@ -74,16 +106,19 @@ def tokenize(title):
     return {w for w in words if len(w) > 2 and w not in STOPWORDS}
 
 
-def fetch_feed(url, hours=48):
+def fetch_feed(url, hours=DEFAULT_WINDOW_HOURS):
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
     entries = []
     try:
         feed = feedparser.parse(url)
-        for entry in feed.entries[:25]:
+        for entry in feed.entries[:MAX_ENTRIES_PER_FEED]:
             published = None
-            if getattr(entry, "published_parsed", None):
+            # Atom feeds routinely carry only <updated>; without this fallback
+            # those entries were treated as undated and never aged out.
+            parsed = getattr(entry, "published_parsed", None) or getattr(entry, "updated_parsed", None)
+            if parsed:
                 try:
-                    published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                    published = datetime(*parsed[:6], tzinfo=timezone.utc)
                 except Exception:
                     pass
             if published is not None and published < cutoff:
@@ -97,6 +132,7 @@ def fetch_feed(url, hours=48):
                 "link": link,
                 "summary": re.sub("<[^<]+?>", "", entry.get("summary", ""))[:300].strip(),
                 "domain": domain_of(link),
+                "published": published,
             })
         return entries, True
     except Exception as e:
@@ -109,8 +145,8 @@ def collect_all():
     articles_by_category = {"ai": [], "saas": [], "it": []}
     feed_status = []
     for category, feeds in FEEDS.items():
-        for url, label in feeds:
-            entries, ok = fetch_feed(url)
+        for url, label, window_hours in feeds:
+            entries, ok = fetch_feed(url, hours=window_hours)
             for e in entries:
                 e["category"] = category
                 e["source_label"] = label
@@ -119,8 +155,31 @@ def collect_all():
     return articles_by_category, feed_status
 
 
-def cluster_articles(articles, threshold=0.35):
-    """Greedy clustering by Jaccard similarity of title tokens."""
+MIN_SHARED_TOKENS = 2
+OVERLAP_THRESHOLD = 0.5
+
+
+def similarity(a_tokens, b_tokens):
+    """Overlap coefficient: |A∩B| / min(|A|,|B|).
+
+    Jaccard punishes length mismatch, which is exactly the normal case here —
+    outlets title the same story at very different lengths ("OpenAI ships X" vs
+    "OpenAI ships X, its biggest model yet, to enterprise customers"). Overlap
+    coefficient measures whether the shorter title is subsumed by the longer.
+    """
+    if not a_tokens or not b_tokens:
+        return 0.0
+    return len(a_tokens & b_tokens) / min(len(a_tokens), len(b_tokens))
+
+
+def cluster_articles(articles):
+    """Greedy clustering of same-story articles by title-token overlap.
+
+    Compares against each cluster's *representative* token set rather than the
+    accumulated union. Expanding the union while using overlap coefficient makes
+    a large cluster absorb almost anything, since min() keeps shrinking relative
+    to it.
+    """
     clusters = []
     for art in articles:
         toks = tokenize(art["title"])
@@ -128,13 +187,9 @@ def cluster_articles(articles, threshold=0.35):
         placed = False
         for cluster in clusters:
             rep_toks = cluster["_tokens"]
-            union = rep_toks | toks
-            if not union:
-                continue
-            jaccard = len(rep_toks & toks) / len(union)
-            if jaccard >= threshold:
+            shared = rep_toks & toks
+            if len(shared) >= MIN_SHARED_TOKENS and similarity(rep_toks, toks) >= OVERLAP_THRESHOLD:
                 cluster["articles"].append(art)
-                cluster["_tokens"] = rep_toks | toks  # expand
                 placed = True
                 break
         if not placed:
@@ -142,23 +197,92 @@ def cluster_articles(articles, threshold=0.35):
     return clusters
 
 
+# Editorial reporting outranks vendor blogs, which outrank raw aggregators.
+# Without this, ranking degenerates to "most recent wins" (almost every cluster
+# is a single article from a single domain), which floods the digest with
+# whichever vendor blog posted last.
+SOURCE_WEIGHT = {
+    "Techmeme": 1.5, "TechCrunch AI": 1.5, "The Verge AI": 1.5,
+    "Ars Technica AI": 1.5, "MIT Technology Review": 1.5, "WIRED AI": 1.5,
+    "The Decoder": 1.5, "VentureBeat": 1.5,
+    "AWS ML Blog": 0.3, "NVIDIA Blog": 0.3, "Product Hunt": 0.3,
+    "Hacker News": 0.3,
+}
+DEFAULT_SOURCE_WEIGHT = 1.0
+
+AI_TERMS = {
+    "ai", "artificial", "intelligence", "llm", "llms", "genai", "agentic",
+    "agent", "agents", "model", "models", "chatbot", "openai", "chatgpt",
+    "gpt", "anthropic", "claude", "gemini", "deepmind", "llama", "mistral",
+    "grok", "copilot", "nvidia", "gpu", "inference", "training", "neural",
+    "transformer", "diffusion", "machine", "learning", "deepseek", "qwen",
+    "reasoning", "multimodal", "embedding", "rag", "finetuning", "alignment",
+    "huggingface", "perplexity", "midjourney", "sora", "robotaxi", "agi",
+}
+
+# Newsletter filler, bare product names, and affiliate/promo posts.
+JUNK_PATTERNS = [
+    re.compile(r"not much happened", re.I),
+    re.compile(r"\bdeal(s)?\b|\bcoupon\b|% off|save \$|\$\d+ back", re.I),
+    re.compile(r"^sign up for\b", re.I),
+]
+MIN_TITLE_WORDS = 3
+
+
+def is_junk(title):
+    if len(re.findall(r"\w+", title)) < MIN_TITLE_WORDS:
+        return True
+    return any(p.search(title) for p in JUNK_PATTERNS)
+
+
+def ai_relevance(articles):
+    """How many distinct AI-related terms appear across a cluster's text."""
+    text = " ".join(f"{a['title']} {a['summary']}" for a in articles)
+    return len(tokenize(text) & AI_TERMS)
+
+
+def score_candidate(cand):
+    domains = cand["domains"]
+    arts = cand["articles"]
+    best_source = max(
+        SOURCE_WEIGHT.get(a["source_label"], DEFAULT_SOURCE_WEIGHT) for a in arts
+    )
+    score = 2.0 * (len(domains) - 1)      # corroboration dominates
+    score += 0.5 * (len(arts) - 1)        # multiple pickups matter less
+    score += best_source
+    if cand["category"] == "ai":
+        score += min(ai_relevance(arts), 4) * 0.4
+    return score
+
+
+def newest_published(articles):
+    stamps = [a["published"] for a in articles if a.get("published")]
+    return max(stamps) if stamps else datetime.min.replace(tzinfo=timezone.utc)
+
+
 def build_topic_candidates(articles_by_category):
     candidates = []
     for category, articles in articles_by_category.items():
-        for cluster in cluster_articles(articles):
+        usable = [a for a in articles if not is_junk(a["title"])]
+        for cluster in cluster_articles(usable):
             arts = cluster["articles"]
             domains = {a["domain"] for a in arts}
-            if len(domains) < MIN_DOMAINS:
+            # An "AI" item with no AI vocabulary anywhere is a feed's off-topic
+            # bleed (telecom promos, EU antitrust, etc.), not AI news.
+            if category == "ai" and ai_relevance(arts) == 0:
                 continue
             arts_sorted = sorted(arts, key=lambda a: len(a["title"]), reverse=True)
-            candidates.append({
+            cand = {
                 "category": category,
                 "representative_title": arts_sorted[0]["title"],
                 "articles": arts,
                 "domains": sorted(domains),
-            })
-    # Prefer topics with more corroborating domains first
-    candidates.sort(key=lambda c: len(c["domains"]), reverse=True)
+                "corroborated": len(domains) >= MIN_CORROBORATED_DOMAINS,
+                "newest": newest_published(arts),
+            }
+            cand["score"] = score_candidate(cand)
+            candidates.append(cand)
+    candidates.sort(key=lambda c: (c["score"], c["newest"]), reverse=True)
     return candidates
 
 
@@ -207,15 +331,20 @@ def is_duplicate(candidate, recent_history):
     return False
 
 
+AI_SLOTS = 10
+SAAS_SLOTS = 2
+IT_SLOTS = 3
+
+
 def select_topics(candidates, recent_history):
     fresh = [c for c in candidates if not is_duplicate(c, recent_history)]
     ai = [c for c in fresh if c["category"] == "ai"]
     saas = [c for c in fresh if c["category"] == "saas"]
     it = [c for c in fresh if c["category"] == "it"]
 
-    selected = ai[:8] + saas[:3] + it[:3]
+    selected = ai[:AI_SLOTS] + saas[:SAAS_SLOTS] + it[:IT_SLOTS]
     # top up from whichever pool still has candidates if under minimum
-    pools = {"ai": ai[8:], "saas": saas[3:], "it": it[3:]}
+    pools = {"ai": ai[AI_SLOTS:], "saas": saas[SAAS_SLOTS:], "it": it[IT_SLOTS:]}
     idx = {"ai": 0, "saas": 0, "it": 0}
     order = ["ai", "saas", "it"]
     while len(selected) < MIN_TOTAL_TOPICS:
@@ -309,8 +438,9 @@ def build_markdown(today_str, selected, ai_count, summaries, feed_status, incomp
     if incomplete:
         lines.append(f"⚠️ 本日 {today_str} の収集は不完全です（{len(selected)}件のみ）。")
         lines.append("")
+    corroborated = sum(1 for c in selected if c["corroborated"])
     lines.append(f"掲載トピック数: {len(selected)}件（AI: {ai_count} / SaaS・ツール: {saas_count} / IT全般: {it_count}）")
-    lines.append("すべて海外3ドメイン以上で照合済み。")
+    lines.append(f"うち{corroborated}件は独立した複数ドメインで裏取り済み。すべて海外ソース。")
     lines.append("")
 
     for category in ["ai", "saas", "it"]:
@@ -325,10 +455,11 @@ def build_markdown(today_str, selected, ai_count, summaries, feed_status, incomp
             s = summaries.get(i, {})
             title_ja = s.get("title_ja", t["representative_title"])
             summary_ja = s.get("summary_ja", "(要約生成に失敗したため原題を掲載)")
+            badge = f"複数ドメイン裏取り済み・{len(t['domains'])}ドメイン" if t["corroborated"] else "単一ドメイン報道"
             lines.append(f"### {n}. {title_ja}")
             lines.append(summary_ja)
             lines.append("")
-            lines.append("**ソース（照合済み）:**")
+            lines.append(f"**ソース（{badge}）:**")
             for a in t["articles"][:6]:
                 lines.append(f"- [{a['title']}]({a['link']}) — {a['domain']}")
             lines.append("")
@@ -345,6 +476,7 @@ def build_markdown(today_str, selected, ai_count, summaries, feed_status, incomp
 def build_html(today_str, selected, ai_count, summaries, feed_status, incomplete=False):
     saas_count = sum(1 for c in selected if c["category"] == "saas")
     it_count = sum(1 for c in selected if c["category"] == "it")
+    corroborated_count = sum(1 for c in selected if c["corroborated"])
 
     def render_section(category, css_class):
         cat_topics = [(i, t) for i, t in enumerate(selected, 1) if t["category"] == category]
@@ -359,11 +491,15 @@ def build_html(today_str, selected, ai_count, summaries, feed_status, incomplete
                 f'<li><a href="{escape_html(a["link"])}" target="_blank" rel="noopener noreferrer">{escape_html(a["title"])} — {escape_html(a["domain"])}</a></li>'
                 for a in t["articles"][:6]
             )
+            badge = (
+                f'複数ドメイン裏取り済み・{len(t["domains"])}ドメイン'
+                if t["corroborated"] else "単一ドメイン報道"
+            )
             cards.append(f'''<div class="card">
   <h2>{title_ja}</h2>
   <p>{summary_ja}</p>
   <div class="sources">
-    <div class="label">ソース（照合済み・3件以上）</div>
+    <div class="label">ソース（{escape_html(badge)}）</div>
     <ul>{source_items}</ul>
   </div>
 </div>''')
@@ -430,7 +566,7 @@ def build_html(today_str, selected, ai_count, summaries, feed_status, incomplete
 <body>
   <header>
     <h1>📰 Daily Digest — 海外AI・IT最新情報</h1>
-    <div class="meta">{today_str} 08:00 JST 更新 — {len(selected)}件（AI:{ai_count} / SaaS:{saas_count} / IT:{it_count}）・海外3ドメイン以上で照合済み</div>
+    <div class="meta">{today_str} 08:00 JST 更新 — {len(selected)}件（AI:{ai_count} / SaaS:{saas_count} / IT:{it_count}）・うち{corroborated_count}件は複数ドメインで裏取り済み</div>
   </header>
   <main>
     {notice}
@@ -448,7 +584,7 @@ def build_html(today_str, selected, ai_count, summaries, feed_status, incomplete
   </main>
   <footer>
     <p>本ページのニュース要約はAI（Llama 3.3, Meta）が自動生成したものです。</p>
-    <p>すべてのトピックは海外の独立した3ドメイン以上で照合しています。著作権は各メディア・原著作者に帰属します。</p>
+    <p>各トピックには裏取り状況（複数ドメイン／単一ドメイン）を明記しています。著作権は各メディア・原著作者に帰属します。</p>
     <p>正確性・完全性を保証するものではありません。情報提供目的のみ。</p>
   </footer>
 </body>

@@ -29,11 +29,14 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: python scripts/generate_digest.py
 
+      - name: Export Obsidian notes
+        run: python scripts/export_obsidian.py
+
       - name: Commit and push
         run: |
           git config user.name "news-digest-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add digests archive index.html data/published_topics.json
+          git add digests archive index.html data/published_topics.json obsidian
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "digest: $(date -u -d '+9 hours' +%Y-%m-%d)"
           git push
