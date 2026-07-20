@@ -1,1 +1,126 @@
-[]
+[
+  {
+    "date": "2026-07-20",
+    "title": "How Apple’s big lawsuit could disrupt OpenAI’s IPO plans",
+    "title_en": "How Apple’s big lawsuit could disrupt OpenAI’s IPO plans",
+    "urls": [
+      "https://techcrunch.com/2026/07/19/can-an-apple-lawsuit-derail-openais-hardware-plans/",
+      "https://techcrunch.com/video/how-apples-big-lawsuit-could-disrupt-openais-ipo-plans/",
+      "https://www.theverge.com/podcast/967244/apple-openai-lawsuit-vergecast"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Anthropic slashes Claude Fable 5 limits in Max and Team Premium and pushes Pro users toward API pricing",
+    "title_en": "Anthropic slashes Claude Fable 5 limits in Max and Team Premium and pushes Pro users toward API pricing",
+    "urls": [
+      "https://the-decoder.com/anthropic-slashes-claude-fable-5-limits-in-max-and-team-premium-and-pushes-pro-users-toward-api-pricing/",
+      "https://simonwillison.net/2026/Jul/18/claude-make-fable-5-permanent/#atom-everything"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Alibaba's Qwen takes on Kimi K3 with open-weight Qwen 3.8, says model is \"second only to Fable 5\"",
+    "title_en": "Alibaba's Qwen takes on Kimi K3 with open-weight Qwen 3.8, says model is \"second only to Fable 5\"",
+    "urls": [
+      "https://the-decoder.com/alibabas-qwen-takes-on-kimi-k3-with-open-weight-qwen-3-8-says-model-is-second-only-to-fable-5/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Google Deepmind argues video generators already contain the world models computer vision has been missing",
+    "title_en": "Google Deepmind argues video generators already contain the world models computer vision has been missing",
+    "urls": [
+      "https://the-decoder.com/google-deepmind-argues-video-generators-already-contain-the-world-models-computer-vision-has-been-missing/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Moonshot's Kimi K3 outperforms Fable 5 in frontend code but lags far behind in complex math",
+    "title_en": "Moonshot's Kimi K3 outperforms Fable 5 in frontend code but lags far behind in complex math",
+    "urls": [
+      "https://the-decoder.com/moonshots-kimi-k3-outperforms-fable-5-in-frontend-code-but-lags-far-behind-in-complex-math/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "China delivers a one-two punch to America’s AI dominance",
+    "title_en": "China delivers a one-two punch to America’s AI dominance",
+    "urls": [
+      "https://www.theverge.com/ai-artificial-intelligence/967781/chinese-ai-models-open-source-moonshot-kimi-k3-alibaba-qwen"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "China's new World Artificial Intelligence Cooperation Organization is President Xi's clearest play yet for a parallel AI order",
+    "title_en": "China's new World Artificial Intelligence Cooperation Organization is President Xi's clearest play yet for a parallel AI order",
+    "urls": [
+      "https://the-decoder.com/chinas-new-world-artificial-intelligence-cooperation-organization-is-president-xis-clearest-play-yet-for-a-parallel-ai-order/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Brex built its AI agent policy by watching what agents actually do, not by writing rules first",
+    "title_en": "Brex built its AI agent policy by watching what agents actually do, not by writing rules first",
+    "urls": [
+      "https://venturebeat.com/orchestration/brex-built-its-ai-agent-policy-by-watching-what-agents-actually-do-not-by-writing-rules-first"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Implement on-behalf-of token exchange for multi-tenant agents with Amazon Bedrock AgentCore Gateway",
+    "title_en": "Implement on-behalf-of token exchange for multi-tenant agents with Amazon Bedrock AgentCore Gateway",
+    "urls": [
+      "https://aws.amazon.com/blogs/machine-learning/multi-agent-social-intelligence-with-strands-agents-and-amazon-bedrock/",
+      "https://aws.amazon.com/blogs/machine-learning/implement-on-behalf-of-token-exchange-for-multi-tenant-agents-with-amazon-bedrock-agentcore-gateway/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Chinese open models like Kimi K3 and Qwen3.8 Max shift the industry's focus back to marginal costs and cost of goods sold, as inference costs scale with revenue (Ben Thompson/Stratechery)",
+    "title_en": "Chinese open models like Kimi K3 and Qwen3.8 Max shift the industry's focus back to marginal costs and cost of goods sold, as inference costs scale with revenue (Ben Thompson/Stratechery)",
+    "urls": [
+      "https://www.techmeme.com/260720/p16#a260720p16"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Federal employees can download TikTok on their work phones again",
+    "title_en": "Federal employees can download TikTok on their work phones again",
+    "urls": [
+      "https://techcrunch.com/2026/07/18/federal-employees-can-download-tiktok-on-their-work-phones-again/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Apple and Google ordered to purge ‘nudify’ apps from App Stores",
+    "title_en": "Apple and Google ordered to purge ‘nudify’ apps from App Stores",
+    "urls": [
+      "https://techcrunch.com/2026/07/17/apple-and-google-ordered-to-purge-nudify-apps-from-app-stores/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Podcast: Strands Agents with Clare Liguori",
+    "title_en": "Podcast: Strands Agents with Clare Liguori",
+    "urls": [
+      "https://www.infoq.com/podcasts/strands-agents/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "AWS Releases Loom, an Open-Source Reference Platform for Governing AI Agents at Enterprise Scale",
+    "title_en": "AWS Releases Loom, an Open-Source Reference Platform for Governing AI Agents at Enterprise Scale",
+    "urls": [
+      "https://www.infoq.com/news/2026/07/loom-aws-agent-platform/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Major glitch in Matrix as UK government projects watchdog rates shared services cluster red",
+    "title_en": "Major glitch in Matrix as UK government projects watchdog rates shared services cluster red",
+    "urls": [
+      "https://www.theregister.com/public-sector/2026/07/20/major-glitch-in-matrix-as-uk-government-projects-watchdog-rates-shared-services-cluster-red/5274368"
+    ]
+  }
+]
