@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+
+# Hand-off files between the collection stage and an out-of-process
+# summarizer (see scripts/claude_digest.ps1). Regenerated on every run.
+data/pending_topics.json
+data/pending_summaries.json

@@ -6,6 +6,7 @@ keeps only topics confirmed by 3+ independent domains, deduplicates against
 publishing history, asks a free-tier LLM (Groq) to translate/summarize into
 Japanese, and writes Markdown + HTML + history files. No paid APIs used.
 """
+import argparse
 import base64
 import json
 import os
@@ -17,7 +18,6 @@ from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
 
 import feedparser
-from groq import Groq
 
 JST = timezone(timedelta(hours=9))
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -367,6 +367,10 @@ def select_topics(candidates, recent_history):
 
 def summarize_with_llm(topics, today_str):
     """Ask Groq (free tier Llama) to translate+summarize each topic into Japanese."""
+    # Imported lazily so --collect/--render work without the groq package
+    # installed, which is the point of the Claude Code path.
+    from groq import Groq
+
     client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
     topics_text_parts = []
@@ -605,7 +609,13 @@ def render_archive_list_html(archive_files):
     return "\n        ".join(items) if items else '<li><span style="color:var(--text-secondary);">まだアーカイブがありません</span></li>'
 
 
-def main():
+def collect_stage():
+    """Everything up to (but not including) summarization.
+
+    Split out so the summarization step is pluggable: the Groq path calls this
+    and continues in-process, while the Claude Code path runs it via --collect,
+    writes the summaries itself, and comes back through --render.
+    """
     today = datetime.now(JST).date()
     today_str = today.strftime("%Y-%m-%d")
 
@@ -618,14 +628,85 @@ def main():
 
     incomplete = len(selected) < MIN_TOTAL_TOPICS or ai_count < MIN_AI_TOPICS
     if not selected:
-        print("No topics could be verified across 3+ domains today.", file=sys.stderr)
+        print("No topics survived collection today.", file=sys.stderr)
 
-    summaries = {}
-    if selected:
-        try:
-            summaries = summarize_with_llm(selected, today_str)
-        except Exception as e:
-            print(f"LLM summarization failed: {e}", file=sys.stderr)
+    return {
+        "date": today_str,
+        "selected": selected,
+        "ai_count": ai_count,
+        "feed_status": feed_status,
+        "incomplete": incomplete,
+    }
+
+
+def _jsonable(value):
+    return value.isoformat() if isinstance(value, datetime) else value
+
+
+def dump_state(state, path):
+    """Serialize collection output for an out-of-process summarizer.
+
+    Drops `_tokens` (a set, and only meaningful during clustering) and renders
+    datetimes as ISO strings. Nothing downstream of this point reads them back
+    as datetimes, so they are not revived on load.
+    """
+    payload = dict(state)
+    payload["selected"] = [
+        {
+            k: (
+                [{ak: _jsonable(av) for ak, av in a.items() if ak != "_tokens"} for a in v]
+                if k == "articles" else _jsonable(v)
+            )
+            for k, v in topic.items()
+            if k != "_tokens"
+        }
+        for topic in state["selected"]
+    ]
+    payload["feed_status"] = [list(row) for row in state["feed_status"]]
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+
+def load_state(path):
+    with open(path, encoding="utf-8") as f:
+        state = json.load(f)
+    state["feed_status"] = [tuple(row) for row in state["feed_status"]]
+    return state
+
+
+def load_summaries(path):
+    """Read a summaries file: a JSON array of {index, title_ja, summary_ja}."""
+    if not path:
+        return {}
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if isinstance(data, dict):          # tolerate {"summaries": [...]}
+        data = data.get("summaries", [])
+    return {int(item["index"]): item for item in data}
+
+
+def write_outputs(state, summaries, force=False):
+    today_str = state["date"]
+    selected = state["selected"]
+    ai_count = state["ai_count"]
+    feed_status = state["feed_status"]
+    incomplete = state["incomplete"]
+
+    # One digest per day. A second run does not re-find the same stories (they
+    # are deduplicated against history), it finds the *next* fifteen, so without
+    # this the day's published digest would be silently replaced by weaker
+    # material and every topic counted twice in the history.
+    existing = os.path.join(REPO_ROOT, "digests", f"{today_str}.md")
+    if os.path.exists(existing) and not force:
+        print(
+            f"{today_str} already has a digest. Refusing to overwrite it; "
+            f"pass --force to replace.",
+            file=sys.stderr,
+        )
+        return
+
+    history = load_history()
 
     md = build_markdown(today_str, selected, ai_count, summaries, feed_status, incomplete)
     html_today = build_html(today_str, selected, ai_count, summaries, feed_status, incomplete)
@@ -657,6 +738,47 @@ def main():
     saas_count = sum(1 for c in selected if c["category"] == "saas")
     it_count = sum(1 for c in selected if c["category"] == "it")
     print(f"Done: {today_str} — {len(selected)} topics (AI:{ai_count} SaaS:{saas_count} IT:{it_count})", file=sys.stderr)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Generate the daily AI/IT digest.",
+        epilog="With no options, collects and summarizes via Groq in one pass "
+               "(the GitHub Actions path). Use --collect/--render to summarize "
+               "with something else, such as Claude Code.",
+    )
+    parser.add_argument("--collect", metavar="PATH",
+                        help="collect and select topics, write them to PATH, then stop")
+    parser.add_argument("--render", metavar="PATH",
+                        help="render outputs from a state file written by --collect")
+    parser.add_argument("--summaries", metavar="PATH",
+                        help="JSON array of {index, title_ja, summary_ja} to use with --render")
+    parser.add_argument("--force", action="store_true",
+                        help="replace today's digest if one already exists")
+    args = parser.parse_args()
+
+    if args.collect and args.render:
+        parser.error("--collect and --render are separate stages; pass only one.")
+
+    if args.collect:
+        state = collect_stage()
+        dump_state(state, args.collect)
+        print(f"Collected {len(state['selected'])} topic(s) -> {args.collect}", file=sys.stderr)
+        return
+
+    if args.render:
+        state = load_state(args.render)
+        write_outputs(state, load_summaries(args.summaries), force=args.force)
+        return
+
+    state = collect_stage()
+    summaries = {}
+    if state["selected"]:
+        try:
+            summaries = summarize_with_llm(state["selected"], state["date"])
+        except Exception as e:
+            print(f"LLM summarization failed: {e}", file=sys.stderr)
+    write_outputs(state, summaries, force=args.force)
 
 
 if __name__ == "__main__":

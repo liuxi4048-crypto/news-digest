@@ -1,9 +1,17 @@
 name: Daily AI/IT Digest
 
 on:
-  schedule:
-    # 08:00 JST = 23:00 UTC (previous day)
-    - cron: "0 23 * * *"
+  # The daily schedule is intentionally disabled. Summarization now runs
+  # through Claude Code (scripts/claude_digest.ps1 + the ai-news-digest
+  # skill), which needs no GROQ_API_KEY. Leaving both paths on a timer would
+  # generate the same day twice and fight over data/published_topics.json.
+  #
+  # Re-enable this only if you go back to the Groq path, and disable the
+  # ObsidianAINewsDigest scheduled task on the PC at the same time.
+  #
+  # schedule:
+  #   # 08:00 JST = 23:00 UTC (previous day)
+  #   - cron: "0 23 * * *"
   workflow_dispatch: {}
 
 permissions:
