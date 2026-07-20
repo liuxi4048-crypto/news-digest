@@ -86,7 +86,7 @@ Write-Step "$copied note(s) updated in the vault"
 # --- 4. commit and push the vault -------------------------------------------
 $status = git -C $VaultPath status --porcelain
 if (-not $status) {
-    Write-Step "Vault already up to date — nothing to commit."
+    Write-Step "Vault already up to date - nothing to commit."
     exit 0
 }
 
