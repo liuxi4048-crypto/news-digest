@@ -122,5 +122,125 @@
     "urls": [
       "https://www.theregister.com/public-sector/2026/07/20/major-glitch-in-matrix-as-uk-government-projects-watchdog-rates-shared-services-cluster-red/5274368"
     ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Hugging Face、自律AIエージェントによる侵入を受けAIで防御",
+    "title_en": "Hugging Face says an AI agent hacked its infrastructure, and it used AI to fight back",
+    "urls": [
+      "https://the-decoder.com/hugging-face-says-an-ai-agent-hacked-its-infrastructure-and-it-used-ai-to-fight-back/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "採用選考でAIは人間よりバイアスを持ちやすいとの研究",
+    "title_en": "AI is more likely than humans to form biases when hiring",
+    "urls": [
+      "https://www.technologyreview.com/2026/07/20/1140655/ai-biases-hiring-humans/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Moonshot、Kimi K3の新規契約を停止 GPU需要が48時間で限界に",
+    "title_en": "Moonshot pauses new Kimi K3 subscriptions after GPU demand maxes out in 48 hours",
+    "urls": [
+      "https://the-decoder.com/moonshot-pauses-new-kimi-k3-subscriptions-after-gpu-demand-maxes-out-in-48-hours/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "作家Dave Eggers、OpenAI社員に「ChatGPTは一世代を黙らせる」と講演",
+    "title_en": "Dave Eggers told OpenAI staff  that ChatGPT was ‘silencing an entire generation’",
+    "urls": [
+      "https://www.theverge.com/ai-artificial-intelligence/967630/dave-eggers-openai-chatgpt-silencing-an-entire-generation"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "オープンウェイトモデル、サイバー性能で最先端に4〜7か月差まで接近",
+    "title_en": "Open-weight models now match frontier cyber performance from just four months ago at a fraction of the cost",
+    "urls": [
+      "https://the-decoder.com/open-weight-models-now-match-frontier-cyber-performance-from-just-four-months-ago-at-a-fraction-of-the-cost/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "米海軍のAI戦略、アラインメント不備より導入の遅さを大きなリスクと位置付け",
+    "title_en": "The Pentagon's new AI playbook treats slow adoption as a bigger risk than imperfect alignment",
+    "urls": [
+      "https://the-decoder.com/the-pentagons-new-ai-playbook-treats-slow-adoption-as-a-bigger-risk-than-imperfect-alignment/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Intuit、4か月でAIエージェント基盤を2度作り直し それが最短経路と説明",
+    "title_en": "Intuit scrapped its own AI agent architecture twice in four months. At VB Transform 2026, its AI VP called that the fast path",
+    "urls": [
+      "https://venturebeat.com/orchestration/intuit-scrapped-its-own-ai-agent-architecture-twice-in-four-months-at-vb-transform-2026-its-ai-vp-called-that-the-fast-path"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "AIエージェントの足枷はモデルではなくレガシー基盤 LinkedIn・Walmart・Zendeskが指摘",
+    "title_en": "Agents think in milliseconds, legacy infrastructure doesn't. LinkedIn, Walmart and Zendesk shared how they closed the gap at VB Transform 2026",
+    "urls": [
+      "https://venturebeat.com/data/agents-think-in-milliseconds-legacy-infrastructure-doesnt-linkedin-walmart-and-zendesk-shared-how-they-closed-the-gap-at-vb-transform-2026"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Patreon、AIクローラーへの「お願い」をやめ実力で遮断へ",
+    "title_en": "Patreon stops asking AI bots not to scrape — and starts blocking them",
+    "urls": [
+      "https://techcrunch.com/2026/07/17/patreon-stops-asking-ai-bots-not-to-scrape-and-starts-blocking-them/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "OpenAI、10代向けのChatGPT安全機能を説明",
+    "title_en": "Why teens deserve access to safe AI",
+    "urls": [
+      "https://openai.com/index/why-teens-deserve-access-safe-ai"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "TSMC、アリゾナ投資に1000億ドル追加 四半期利益は77%増",
+    "title_en": "TSMC adds $100 billion to Arizona plan as quarterly profit rises 77%",
+    "urls": [
+      "https://betanews.com/article/tsmc-100-billion-arizona-chip-expansion/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Microsoft Teams、AI会議アーカイブを既定で自動生成へ",
+    "title_en": "Microsoft Teams will generate AI meeting archives by default",
+    "urls": [
+      "https://betanews.com/article/microsoft-teams-will-generate-ai-meeting-archives-by-default/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "OpenAIのCodex Micro、Stream Deck+で安価に自作した事例",
+    "title_en": "I recreated OpenAI's Codex Micro for a lot less - and mine is more customizable",
+    "urls": [
+      "https://www.zdnet.com/article/codex-micro-keypad-alternative-stream-deck-plus/"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "Paidworkの2300万件データベースが流出、銀行口座情報を含む",
+    "title_en": "Infosec expert: Paidwork users' data pwned after 23M-record database dumped online",
+    "urls": [
+      "https://www.theregister.com/cyber-crime/2026/07/20/infosec-expert-paidwork-users-data-pwned-after-23m-record-database-dumped-online/5274869"
+    ]
+  },
+  {
+    "date": "2026-07-20",
+    "title": "プラットフォームエンジニアリングは技術だけでは成功しない",
+    "title_en": "Presentation: Platform Engineering for Everyone - Success Can’t Be Coded",
+    "urls": [
+      "https://www.infoq.com/presentations/platform-engineering-product-mindset/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global"
+    ]
   }
 ]
