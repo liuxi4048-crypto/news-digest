@@ -112,11 +112,16 @@ def yaml_escape(s):
 
 
 def note_basename(date, title):
-    """Stable, filesystem/Obsidian-safe basename: date prefix + title + hash."""
+    """Stable, filesystem/Obsidian-safe basename: title + hash, no date.
+
+    Filenames carry no dates (2026-07-23 user decision) — the date lives in
+    frontmatter and the MOC table. A repeated title overwrites the older note,
+    which is the desired dedup behaviour for re-reported stories.
+    """
     clean = re.sub(r'[\\/:*?"<>|#^\[\]]', "", title)
     clean = re.sub(r"\s+", " ", clean).strip()[:48].rstrip()
     digest = hashlib.md5(title.encode("utf-8")).hexdigest()[:4]
-    return f"{date} {clean} {digest}"
+    return f"{clean} {digest}"
 
 
 def build_topic_note(date, heading, topic):
@@ -246,8 +251,13 @@ def main():
                     written += 1
 
     latest = max((r[0] for rows in by_category.values() for r in rows), default="")
-    for rows in by_category.values():
-        rows.sort(reverse=True)
+    # A re-reported story shares its basename across dates; keep only the
+    # newest occurrence so the MOC lists each note exactly once.
+    for folder, rows in by_category.items():
+        newest = {}
+        for row in sorted(rows):          # oldest first; later wins
+            newest[row[1]] = row
+        by_category[folder] = sorted(newest.values(), reverse=True)
     by_category = {k: v for k, v in by_category.items() if v}
     write_if_changed(
         os.path.join(OBSIDIAN_DIR, f"{MOC_NAME}.md"),
