@@ -1,10 +1,12 @@
 """
-Convert generated digests into Obsidian-native notes.
+Convert generated digests into Obsidian-native notes, organised by category.
 
-Reads `digests/*.md` (produced by generate_digest.py) and writes
-`obsidian/AI News/<date>.md` plus an `_AI News MOC.md` index. Output uses YAML
-frontmatter, Obsidian callouts, and `[[wikilinks]]` so the notes participate in
-search, graph view, and Dataview queries rather than sitting there as inert text.
+Reads `digests/*.md` (produced by generate_digest.py) and writes one note per
+topic under `obsidian/AI News/<カテゴリ>/`, plus an `_AI News MOC.md` index.
+Categories mirror the digest sections (AI / SaaS・ツール / IT全般); the date
+survives only as a filename prefix so notes sort chronologically *inside* a
+category. This matches the vault rule "manage by information, not by date"
+(2026-07-23 user decision).
 
 Pure stdlib and idempotent: safe to re-run over the whole history at any time.
 No API keys required, so this also runs fine on a laptop with no secrets.
@@ -13,6 +15,7 @@ Usage:
     python scripts/export_obsidian.py            # all digests
     python scripts/export_obsidian.py 2026-07-20 # a single date
 """
+import hashlib
 import os
 import re
 import sys
@@ -37,31 +40,22 @@ ENTITY_RES = [
     for name in ENTITIES
 ]
 
-CATEGORY_TAGS = {
-    "🤖 AI": "ai",
-    "☁️ SaaS・ツール": "saas",
-    "💻 IT全般": "it",
+# Digest section heading -> (folder name, tag)
+CATEGORIES = {
+    "🤖 AI": ("AI", "ai"),
+    "☁️ SaaS・ツール": ("SaaS・ツール", "saas"),
+    "💻 IT全般": ("IT全般", "it"),
 }
+FALLBACK_CATEGORY = ("その他", "misc")
 
 
 def parse_digest(text):
     """Parse a digest markdown file into a structured dict."""
-    result = {
-        "date": None, "incomplete": False, "counts_line": "",
-        "corroboration_line": "", "sections": [],
-    }
+    result = {"date": None, "sections": []}
 
     m = re.search(r"^# Daily Digest — (\d{4}-\d{2}-\d{2})", text, re.M)
     if m:
         result["date"] = m.group(1)
-    result["incomplete"] = "収集は不完全" in text
-
-    m = re.search(r"^掲載トピック数: .*$", text, re.M)
-    if m:
-        result["counts_line"] = m.group(0)
-    m = re.search(r"^うち\d+件は.*$", text, re.M)
-    if m:
-        result["corroboration_line"] = m.group(0)
 
     # Split off the trailing feed-inventory section; it is provenance noise in
     # a note you actually read, and it is identical every day.
@@ -117,92 +111,56 @@ def yaml_escape(s):
     return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
-def parse_counts(counts_line):
-    """Pull (total, ai, saas, it) out of the counts line; zeros if unparsable."""
-    m = re.search(
-        r"(\d+)件（AI: (\d+) / SaaS・ツール: (\d+) / IT全般: (\d+)）", counts_line
-    )
-    return tuple(int(g) for g in m.groups()) if m else (0, 0, 0, 0)
+def note_basename(date, title):
+    """Stable, filesystem/Obsidian-safe basename: date prefix + title + hash."""
+    clean = re.sub(r'[\\/:*?"<>|#^\[\]]', "", title)
+    clean = re.sub(r"\s+", " ", clean).strip()[:48].rstrip()
+    digest = hashlib.md5(title.encode("utf-8")).hexdigest()[:4]
+    return f"{date} {clean} {digest}"
 
 
-def build_note(parsed, prev_date, next_date):
-    date = parsed["date"]
-    total, ai_n, saas_n, it_n = parse_counts(parsed["counts_line"])
-    corroborated = 0
-    m = re.search(r"うち(\d+)件", parsed["corroboration_line"])
-    if m:
-        corroborated = int(m.group(1))
-
-    all_text = " ".join(
-        t["title"] + " " + t["summary"]
-        for s in parsed["sections"] for t in s["topics"]
-    )
-    entities = find_entities(all_text)
+def build_topic_note(date, heading, topic):
+    folder, tag = CATEGORIES.get(heading, FALLBACK_CATEGORY)
+    entities = find_entities(topic["title"] + " " + topic["summary"])
+    corroborated = "裏取り" in topic["badge"]
 
     fm = [
         "---",
-        f"title: {yaml_escape('AI News — ' + date)}",
+        f"title: {yaml_escape(topic['title'])}",
         f"date: {date}",
-        "type: news-digest",
+        "type: news-topic",
         "source: news-digest",
+        f"category: {yaml_escape(folder)}",
         "tags:",
         "  - ai-news",
-        "  - daily-digest",
-        f"topics: {total}",
-        f"ai_topics: {ai_n}",
-        f"corroborated: {corroborated}",
+        f"  - {tag}",
+        f"corroborated: {'true' if corroborated else 'false'}",
     ]
     if entities:
         fm.append("entities:")
         fm.extend(f"  - {yaml_escape(e)}" for e in entities)
     fm.append("---")
 
-    out = fm + ["", f"# 🤖 AI News — {date}", ""]
+    out = fm + ["", f"# {topic['title']}", ""]
+    if topic["summary"]:
+        out += [topic["summary"], ""]
+    if topic["sources"]:
+        label = topic["badge"] or "ソース"
+        out.append(f"> [!quote]- {label}")
+        for s in topic["sources"]:
+            out.append(f"> - [{s['title']}]({s['url']}) — `{s['domain']}`")
+        out.append("")
 
-    if parsed["incomplete"]:
-        out += [
-            "> [!warning] 収集が不完全",
-            f"> {date} は取得できたトピックが少なく、通常より内容が薄い。",
-            "",
-        ]
-
-    out += [
-        "> [!abstract] サマリー",
-        f"> **{total}件** — AI {ai_n} / SaaS {saas_n} / IT {it_n}",
-        f"> 独立した複数ドメインで裏取り済み: **{corroborated}件**",
-        "",
-    ]
-
-    for section in parsed["sections"]:
-        tag = CATEGORY_TAGS.get(section["heading"], "misc")
-        out += [f"## {section['heading']}", "", f"#{tag}", ""]
-        for i, topic in enumerate(section["topics"], 1):
-            out += [f"### {i}. {topic['title']}", ""]
-            if topic["summary"]:
-                out += [topic["summary"], ""]
-            if topic["sources"]:
-                label = topic["badge"] or "ソース"
-                out.append(f"> [!quote]- {label}")
-                for s in topic["sources"]:
-                    out.append(f"> - [{s['title']}]({s['url']}) — `{s['domain']}`")
-                out.append("")
-
-    out += ["---", "", "## ナビゲーション", "", f"- 索引: [[{MOC_NAME}]]"]
-    if prev_date:
-        out.append(f"- 前日: [[{prev_date}]]")
-    if next_date:
-        out.append(f"- 翌日: [[{next_date}]]")
-
+    out += ["---", "", f"索引: [[{MOC_NAME}]]"]
     if entities:
-        out += ["", "## 登場エンティティ", ""]
-        out.append(" · ".join(f"[[{e}]]" for e in entities))
-
+        out.append("登場: " + " · ".join(f"[[{e}]]" for e in entities))
     out.append("")
     return "\n".join(out)
 
 
-def build_moc(entries):
-    """entries: list of (date, total, ai_n, corroborated), newest first."""
+def build_moc(by_category, latest_date):
+    """by_category: {folder: [(date, basename, title, corroborated), ...] newest first}."""
+    total = sum(len(v) for v in by_category.values())
     out = [
         "---",
         f"title: {yaml_escape(MOC_NAME)}",
@@ -214,12 +172,12 @@ def build_moc(entries):
         "",
         "# 🗂️ AI News — 索引",
         "",
-        "毎朝 08:00 JST に Claude Code が収集・要約したダイジェスト。",
-        "生成元は `news-digest` リポジトリ。",
+        "毎朝 08:00 JST に Claude Code が収集・要約したニュース。1トピック=1ノートで、",
+        "**カテゴリ別フォルダ**に日付プレフィックス付きで蓄積される。生成元は `news-digest` リポジトリ。",
         "",
     ]
 
-    if not entries:
+    if not total:
         out += [
             "> [!info] まだノートがない",
             "> 次回の自動実行を待つか、Claude Code で `/ai-news-digest` を実行する。",
@@ -227,24 +185,31 @@ def build_moc(entries):
         ]
         return "\n".join(out)
 
-    total_topics = sum(e[1] for e in entries)
     out += [
         "> [!abstract] 統計",
-        f"> ノート **{len(entries)}件** · 収録トピック **{total_topics}件**",
-        f"> 最新: [[{entries[0][0]}]]",
+        f"> トピックノート **{total}件** · 最新の収集日: **{latest_date}**",
+        "> " + " / ".join(f"{k} {len(v)}" for k, v in by_category.items()),
         "",
     ]
 
-    current_month = None
-    for date, total, ai_n, corroborated in entries:
-        month = date[:7]
-        if month != current_month:
-            out += ["", f"## {month}", "", "| 日付 | 件数 | AI | 裏取り |", "| --- | --- | --- | --- |"]
-            current_month = month
-        out.append(f"| [[{date}]] | {total} | {ai_n} | {corroborated} |")
+    for folder, rows in by_category.items():
+        out += ["", f"## {folder}", "", "| 日付 | トピック |", "| --- | --- |"]
+        for date, basename, title, corroborated in rows:
+            mark = " ✅" if corroborated else ""
+            out.append(f"| {date} | [[{basename}\\|{title}]]{mark} |")
 
     out.append("")
     return "\n".join(out)
+
+
+def write_if_changed(path, content):
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            if f.read() == content:
+                return False
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+    return True
 
 
 def main():
@@ -256,48 +221,43 @@ def main():
         if f.endswith(".md") and DATE_RE.match(f[:-3])
     )
 
-    parsed_by_date = {}
+    written = 0
+    by_category = {folder: [] for folder, _ in CATEGORIES.values()}
     for date in dates:
         with open(os.path.join(DIGESTS_DIR, f"{date}.md"), encoding="utf-8") as f:
             parsed = parse_digest(f.read())
         if not parsed["date"] or not parsed["sections"]:
             continue  # empty digest — an empty note is worse than no note
-        parsed_by_date[date] = parsed
 
-    usable = sorted(parsed_by_date)
-    written = 0
-    for i, date in enumerate(usable):
-        if only and date != only:
-            continue
-        prev_date = usable[i - 1] if i > 0 else None
-        next_date = usable[i + 1] if i + 1 < len(usable) else None
-        note = build_note(parsed_by_date[date], prev_date, next_date)
-        path = os.path.join(OBSIDIAN_DIR, f"{date}.md")
-        # Skip untouched files so the vault's git history stays meaningful.
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as f:
-                if f.read() == note:
+        for section in parsed["sections"]:
+            folder, _ = CATEGORIES.get(section["heading"], FALLBACK_CATEGORY)
+            cat_dir = os.path.join(OBSIDIAN_DIR, folder)
+            os.makedirs(cat_dir, exist_ok=True)
+            for topic in section["topics"]:
+                basename = note_basename(date, topic["title"])
+                by_category.setdefault(folder, []).append(
+                    (date, basename,
+                     topic["title"], "裏取り" in topic["badge"])
+                )
+                if only and date != only:
                     continue
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(note)
-        written += 1
+                note = build_topic_note(date, section["heading"], topic)
+                if write_if_changed(os.path.join(cat_dir, basename + ".md"), note):
+                    written += 1
 
-    entries = []
-    for date in reversed(usable):
-        p = parsed_by_date[date]
-        total, ai_n, _, _ = parse_counts(p["counts_line"])
-        m = re.search(r"うち(\d+)件", p["corroboration_line"])
-        entries.append((date, total, ai_n, int(m.group(1)) if m else 0))
-
-    with open(os.path.join(OBSIDIAN_DIR, f"{MOC_NAME}.md"), "w", encoding="utf-8") as f:
-        f.write(build_moc(entries))
-
-    skipped = len(dates) - len(usable)
-    print(
-        f"Obsidian export: {written} note(s) written, {len(usable)} total, "
-        f"{skipped} empty digest(s) skipped.",
-        file=sys.stderr,
+    latest = max((r[0] for rows in by_category.values() for r in rows), default="")
+    for rows in by_category.values():
+        rows.sort(reverse=True)
+    by_category = {k: v for k, v in by_category.items() if v}
+    write_if_changed(
+        os.path.join(OBSIDIAN_DIR, f"{MOC_NAME}.md"),
+        build_moc(by_category, latest),
     )
+
+    total = sum(len(v) for v in by_category.values())
+    # stdout, not stderr: the PowerShell wrapper runs with ErrorAction=Stop,
+    # which promotes any stderr line from a native command into a failure.
+    print(f"Obsidian export: {written} note(s) written, {total} topic note(s) total.")
 
 
 if __name__ == "__main__":

@@ -70,10 +70,15 @@ $target = Join-Path $VaultPath "10_情報/AI News"
 New-Item -ItemType Directory -Force $target | Out-Null
 
 # Copy only when content actually differs, so unchanged notes keep their
-# original mtime and the vault's git history stays readable.
+# original mtime and the vault's git history stays readable. Notes live in
+# category subfolders, so walk recursively and mirror the relative layout.
 $copied = 0
-foreach ($file in Get-ChildItem $source -Filter *.md) {
-    $dest = Join-Path $target $file.Name
+$expected = @{}
+foreach ($file in Get-ChildItem $source -Recurse -Filter *.md) {
+    $rel = $file.FullName.Substring($source.Length).TrimStart('\', '/')
+    $expected[$rel] = $true
+    $dest = Join-Path $target $rel
+    New-Item -ItemType Directory -Force (Split-Path $dest) | Out-Null
     $isNew = -not (Test-Path $dest)
     if ($isNew -or
         (Get-FileHash $file.FullName).Hash -ne (Get-FileHash $dest).Hash) {
@@ -81,9 +86,23 @@ foreach ($file in Get-ChildItem $source -Filter *.md) {
         $copied++
     }
 }
-Write-Step "$copied note(s) updated in the vault"
+# Prune vault notes that no longer exist in the generated set (e.g. the old
+# one-file-per-day layout). The generator is the single source of truth here.
+$pruned = 0
+foreach ($file in Get-ChildItem $target -Recurse -Filter *.md) {
+    $rel = $file.FullName.Substring((Join-Path $VaultPath "10_情報/AI News").Length).TrimStart('\', '/')
+    if (-not $expected.ContainsKey($rel)) {
+        Remove-Item $file.FullName -Force
+        $pruned++
+    }
+}
+Write-Step "$copied note(s) updated, $pruned stale note(s) removed in the vault"
 
 # --- 4. commit and push the vault -------------------------------------------
+# git writes progress and CRLF warnings to stderr; under ErrorAction=Stop
+# PowerShell 5.1 would promote those to terminating errors. Exit codes are
+# checked explicitly below, so plain Continue is the correct mode here.
+$ErrorActionPreference = "Continue"
 $status = git -C $VaultPath status --porcelain
 if (-not $status) {
     Write-Step "Vault already up to date - nothing to commit."
