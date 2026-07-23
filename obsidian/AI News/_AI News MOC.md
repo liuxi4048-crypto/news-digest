@@ -8,7 +8,8 @@ tags:
 
 # 🗂️ AI News — 索引
 
-`news-digest` リポジトリが毎朝 08:00 JST に自動生成したダイジェスト。
+毎朝 08:00 JST に Claude Code が収集・要約したダイジェスト。
+生成元は `news-digest` リポジトリ。
 
 > [!abstract] 統計
 > ノート **1件** · 収録トピック **15件**

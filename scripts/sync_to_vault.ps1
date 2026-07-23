@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Pull the latest digests and publish them into the Obsidian vault.
 
@@ -7,7 +7,7 @@
     generates the daily digest. Steps:
       1. git pull the news-digest repo
       2. regenerate the Obsidian notes from digests/ (idempotent)
-      3. copy the notes into the vault's "10_AI News" folder
+      3. copy the notes into the vault's "10_情報/AI News" folder
       4. commit and push the vault so the Android client picks it up
 
     Safe to run by hand at any time; it is a no-op when nothing changed.
@@ -66,7 +66,7 @@ if (-not (Test-Path $source)) {
 }
 
 # --- 3. copy into the vault --------------------------------------------------
-$target = Join-Path $VaultPath "10_AI News"
+$target = Join-Path $VaultPath "10_情報/AI News"
 New-Item -ItemType Directory -Force $target | Out-Null
 
 # Copy only when content actually differs, so unchanged notes keep their
