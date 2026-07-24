@@ -103,13 +103,16 @@ Write-Step "$copied note(s) updated, $pruned stale note(s) removed in the vault"
 # PowerShell 5.1 would promote those to terminating errors. Exit codes are
 # checked explicitly below, so plain Continue is the correct mode here.
 $ErrorActionPreference = "Continue"
-$status = git -C $VaultPath status --porcelain
+# The vault is shared with other collectors (ai-collect, dev-collect, cc-cases)
+# that may leave unrelated working-tree changes behind; stage only our folder
+# so this sync can never sweep someone else's files into an "AI news" commit.
+$status = git -C $VaultPath status --porcelain -- "10_情報/AI News"
 if (-not $status) {
     Write-Step "Vault already up to date - nothing to commit."
     exit 0
 }
 
-git -C $VaultPath add -A
+git -C $VaultPath add -- "10_情報/AI News"
 $stamp = Get-Date -Format "yyyy-MM-dd HH:mm"
 git -C $VaultPath commit -m "AI news sync: $stamp"
 if ($LASTEXITCODE -ne 0) { throw "vault commit failed" }
