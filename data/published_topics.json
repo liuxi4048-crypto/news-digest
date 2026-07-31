@@ -242,5 +242,136 @@
     "urls": [
       "https://www.infoq.com/presentations/platform-engineering-product-mindset/?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global"
     ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Anthropicのモデルが実企業3社に侵入、セキュリティ試験中に発覚",
+    "title_en": "Anthropic says its own AI models breached three companies during security tests",
+    "urls": [
+      "https://techcrunch.com/2026/07/30/anthropic-says-its-own-ai-models-breached-three-companies-during-security-tests/",
+      "https://www.wired.com/story/anthropic-says-claude-hacked-real-systems-during-cybersecurity-tests/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Google、Gemini Robotics 2.0発表 器用さと安全性を向上",
+    "title_en": "Google reveals Gemini Robotics 2.0, promising improved dexterity and safety",
+    "urls": [
+      "https://arstechnica.com/ai/2026/07/google-reveals-gemini-robotics-2-0-promising-improved-dexterity-and-safety/",
+      "https://www.wired.com/story/google-gemini-can-control-humanoid-robots/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Claude/ChatGPT向けカスタムMCPサーバーと共有メモリの動き",
+    "title_en": "Show HN: Shared memory graph for Claude and ChatGPT, over MCP",
+    "urls": [
+      "https://simonwillison.net/2026/Jul/29/mcp-in-claude-and-chatgpt/#atom-everything",
+      "https://uml.gpmai.workers.dev"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "OpenAI、GPT-5.6のLuna/Terraを大幅値下げ",
+    "title_en": "Advancing the price-performance frontier with GPT‑5.6",
+    "urls": [
+      "https://simonwillison.net/2026/Jul/30/luna-price-drop/#atom-everything",
+      "https://openai.com/index/advancing-the-price-performance-frontier-with-gpt-5-6"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "OpenAI「Presence」発表とBedrockのGPT-5.6明示的キャッシュ",
+    "title_en": "Introducing explicit prompt caching for OpenAI GPT-5.6 models on Amazon Bedrock",
+    "urls": [
+      "https://openai.com/index/introducing-openai-presence",
+      "https://aws.amazon.com/blogs/machine-learning/introducing-explicit-prompt-caching-for-openai-gpt-5-6-models-on-amazon-bedrock/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "AIヘッジファンド「Situational Awareness」、公開株は手放すもAnthropic株は保持",
+    "title_en": "AI hedge fund Situational Awareness may have sold its public portfolio, but it still has its Anthropic shares",
+    "urls": [
+      "https://techcrunch.com/2026/07/30/ai-hedge-fund-situational-awareness-may-have-sold-its-public-portfolio-but-it-still-has-its-anthropic-shares/",
+      "https://www.theverge.com/ai-artificial-intelligence/973467/ai-bet-situational-awareness-oops-stonks"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "OpenAIの研究者向けChatGPT無償提供とGoogleのGenesis Mission支援",
+    "title_en": "Accelerating the frontiers of scientific discovery: Google’s $40M commitment to the Genesis Mission",
+    "urls": [
+      "https://openai.com/index/chatgpt-for-academic-researchers",
+      "https://deepmind.google/blog/accelerating-the-frontiers-of-scientific-discovery-googles-40m-commitment-to-the-genesis-mission/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "ザッカーバーグ氏「5年後には数十億人がパーソナルAIエージェントを持つ」",
+    "title_en": "Mark Zuckerberg predicts that billions of people will have personal AI agents in five years",
+    "urls": [
+      "https://techcrunch.com/2026/07/29/mark-zuckerberg-predicts-that-billions-of-people-will-have-personal-ai-agents-in-five-years/",
+      "https://www.theverge.com/tech/972294/meta-q2-2026-earnings-mark-zuckerberg-personal-ai-agents"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "OpenAIのHugging Face侵入事件、技術的詳細タイムラインが公開",
+    "title_en": "Anatomy of a Frontier Lab Agent Intrusion: A Technical Timeline of the July 2026 Incident",
+    "urls": [
+      "https://simonwillison.net/2026/Jul/28/anatomy-of-a-frontier-lab-agent-intrusion/#atom-everything",
+      "https://huggingface.co/blog/agent-intrusion-technical-timeline"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "DeepSeekの新Flashモデル、GPT-5.6 Lunaに肉薄しコストは約6割減(単独ソース)",
+    "title_en": "New Deepseek Flash model matches OpenAI's GPT-5.6 Luna at roughly 60 percent lower cost",
+    "urls": [
+      "https://the-decoder.com/new-deepseek-flash-model-matches-openais-gpt-5-6-luna-at-roughly-60-percent-lower-cost/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Windows 11向け8月更新、Explorer・検索機能を改善(単独ソース)",
+    "title_en": "Microsoft releases KB5101684 update for Windows 11 with Explorer and Search improvements",
+    "urls": [
+      "https://betanews.com/article/microsoft-previews-kb5101681-update-for-windows-11-26h1/",
+      "https://betanews.com/article/microsoft-releases-kb5101684-update-for-windows-11-with-explorer-and-search-improvements/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Netflix、消失した映画マスター原版めぐり1.05億ドルの提訴(単独ソース)",
+    "title_en": "Netflix sued for $105 million over lost Nicolas Cage film master copy",
+    "urls": [
+      "https://betanews.com/article/netflix-fortitude-lawsuit/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Samsung、メモリ不足は2028年まで続くと警告 利益は19倍に急増",
+    "title_en": "Samsung warns memory crunch will last through 2028 as profit rises 19-fold",
+    "urls": [
+      "https://www.theregister.com/systems/2026/07/30/samsung-warns-memory-crunch-will-last-through-2028-as-profit-rises-19-fold/5281142",
+      "https://techcrunch.com/2026/07/31/samsung-expects-memory-shortage-to-worsen-through-2027-and-last-until-2028/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Motorola Moto G Play、期間限定で100ドルに値下げ(単独ソース)",
+    "title_en": "Looking for a new budget phone? This Motorola model is just $100, but only for a limited time",
+    "urls": [
+      "https://www.zdnet.com/article/motorola-moto-g-play-2024-deal/"
+    ]
+  },
+  {
+    "date": "2026-08-01",
+    "title": "Siri AI、ヘビーユーザー向けに有料化の可能性(単独ソース)",
+    "title_en": "Siri AI could come with a paywall for power users",
+    "urls": [
+      "https://techcrunch.com/2026/07/31/siri-ai-could-come-with-a-paywall-for-power-users/"
+    ]
   }
 ]
